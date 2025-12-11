@@ -4,6 +4,6 @@
 *.test
 *.out
 
-/pkg/
-# generated files:
-!/pkg/api/server.gen.go 
+/pkg/*
+!/pkg/api/
+!/pkg/api/server.gen.go
