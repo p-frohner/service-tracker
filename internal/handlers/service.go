@@ -1,14 +1,13 @@
 package handlers
 
 import (
-	"encoding/json" // Needed for json.NewEncoder and DecodeJSONRequest helpers
-	"fmt"           // Needed for fmt.Sprintf (for ID generation)
-	"net/http"      // Needed for http.ResponseWriter and http.Request
+	"encoding/json"
+	"fmt"
+	"net/http"
 
-	// Needed for sync.Mutex
 	"service-tracker/pkg/api"
 	"sync"
-	"time" // Needed for time.Now() (for ID generation)
+	"time"
 )
 
 type Server struct {
@@ -31,17 +30,17 @@ func (s *Server) GetVehicles(w http.ResponseWriter, r *http.Request) {
 	s.Mu.Lock()
 	defer s.Mu.Unlock()
 
-	// 1. Convert the map of Vehicle structs to a slice of Vehicle structs.
+	// Convert the map of Vehicle structs to a slice of Vehicle structs.
 	vehicles := make([]api.Vehicle, 0, len(s.Vehicles))
 	for _, v := range s.Vehicles {
 		vehicles = append(vehicles, v)
 	}
 
-	// 2. Set the Content-Type header and status code (200 OK).
+	// Set the Content-Type header and status code (200 OK).
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
-	// 3. Encode the slice of vehicles to the response writer.
+	// Encode the slice of vehicles to the response writer.
 	if err := json.NewEncoder(w).Encode(vehicles); err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 	}
