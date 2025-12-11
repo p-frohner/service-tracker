@@ -1,0 +1,9 @@
+# Standard Go Build Artifacts
+############################
+*.exe
+*.test
+*.out
+
+/pkg/
+# generated files:
+!/pkg/api/server.gen.go 

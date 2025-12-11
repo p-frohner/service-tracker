@@ -1,0 +1,196 @@
+openapi: 3.0.0
+info:
+  title: Service Tracker API
+  description: An API to track vehicle maintenance records.
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+paths:
+  /vehicles:
+    get:
+      summary: Retrieve a list of vehicles
+      responses:
+        '200':
+          description: A list of vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vehicle'
+    post:
+      summary: Add a new vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vehicle'
+      responses:
+        '201':
+          description: Vehicle created successfully
+  # /vehicles/{vehicleId}:
+  #   parameters:
+  #     - in: path
+  #       name: vehicleId
+  #       required: true
+  #       schema:
+  #         type: string
+  #   get:
+  #     summary: Retrieve a vehicle by ID
+  #     responses:
+  #       '200':
+  #         description: A vehicle object
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Vehicle'
+  #       '404':
+  #         description: Vehicle not found
+  #   put:
+  #     summary: Update an existing vehicle
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/Vehicle'
+  #     responses:
+  #       '200':
+  #         description: Vehicle updated successfully
+  #   delete:
+  #     summary: Delete a vehicle
+  #     responses:
+  #       '204':
+  #         description: Vehicle deleted successfully
+  # /vehicles/{vehicleId}/maintenance:
+  #   get:
+  #     summary: Retrieve maintenance records for a vehicle
+  #     parameters:
+  #       - in: path
+  #         name: vehicleId
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: A list of maintenance records
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/MaintenanceRecord'
+  #   post:
+  #     summary: Add a maintenance record for a vehicle
+  #     parameters:
+  #       - in: path
+  #         name: vehicleId
+  #         required: true
+  #         schema:
+  #           type: string
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/MaintenanceRecord'
+  #     responses:
+  #       '201':
+  #         description: Maintenance record created successfully
+  # /vehicles/{vehicleId}/maintenance/{recordId}:
+  #     parameters:
+  #       - in: path
+  #         name: vehicleId
+  #         required: true
+  #         schema:
+  #           type: string
+  #       - in: path
+  #         name: recordId
+  #         required: true
+  #         schema:
+  #           type: string
+  #     get:
+  #       summary: Retrieve a specific maintenance record
+  #       responses:
+  #         '200':
+  #           description: A maintenance record object
+  #           content:
+  #             application/json:
+  #               schema:
+  #                 $ref: '#/components/schemas/MaintenanceRecord'
+  #         '404':
+  #           description: Record not found
+  #     put: 
+  #       summary: Update an existing maintenance record
+  #       requestBody:
+  #         required: true
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/MaintenanceRecord'
+  #       responses:
+  #         '200':
+  #           description: Record updated successfully
+  #     delete:
+  #       summary: Delete a maintenance record
+  #       responses:
+  #         '204':
+  #           description: Record deleted successfully
+components:
+  schemas:
+    MaintenanceRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        cost:
+          type: string
+          description: Cost of the service.
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+        mileage:
+          type: integer
+          minimum: 0
+        notes: 
+          type: string
+          description: Optional notes.
+      required:
+        - date
+        - description
+        - mileage
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        make:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+          minimum: 1900
+          maximum: 2025 # TODO: can we make this dynamic or just leave that to the FE?
+      required:
+        - make
+        - model
+        - year
+securitySchemes:
+  bearerAuth:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
+security:
+  - bearerAuth: []
+tags:
+  - name: Vehicles
+    description: Operations related to vehicles
+  - name: Maintenance
+    description: Operations related to maintenance records
