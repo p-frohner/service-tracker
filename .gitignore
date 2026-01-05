@@ -1,3 +1,13 @@
+# Standard Go Build Artifacts
+############################
+*.exe
+*.test
+*.out
+
+/pkg/*
+!/pkg/api/
+!/pkg/api/server.gen.go
+
 # Logs
 logs
 *.log
