@@ -7,7 +7,7 @@ The app allows users to log, organize, and access information about routine main
 With a focus on simplicity and efficiency, Service Tracker ensures that users can keep their vehicles in optimal condition by staying on top of service schedules and tracking costs over time.
 
 
-# Go Backend
+# Go Back End
 
 Start the server:
 
