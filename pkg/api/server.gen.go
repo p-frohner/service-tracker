@@ -210,11 +210,13 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	if r == nil {
 		r = chi.NewRouter()
 	}
+
 	if options.ErrorHandlerFunc == nil {
 		options.ErrorHandlerFunc = func(w http.ResponseWriter, r *http.Request, err error) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 	}
+
 	wrapper := ServerInterfaceWrapper{
 		Handler:            si,
 		HandlerMiddlewares: options.Middlewares,
@@ -224,6 +226,7 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/vehicles", wrapper.GetVehicles)
 	})
+
 	r.Group(func(r chi.Router) {
 		r.Post(options.BaseURL+"/vehicles", wrapper.PostVehicles)
 	})
