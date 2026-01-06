@@ -5,16 +5,15 @@ import {
 	Divider,
 	ThemeProvider,
 } from "@mui/material";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 import { ErrorBoundary } from "react-error-boundary";
 
 import logo from "/logo.png";
-
 import { theme } from "../themeProvider";
-import { VehicleManager } from "./VehicleManager";
 
-export const App = () => {
-	return (
+export const Route = createRootRoute({
+	component: () => (
 		<ErrorBoundary
 			FallbackComponent={({ error }) => <pre>{error.message}</pre>}
 		>
@@ -33,14 +32,14 @@ export const App = () => {
 							}}
 						/>
 						<Box sx={{ backgroundColor: "primary.paper" }}>
-							<VehicleManager />
+							<Outlet />
 						</Box>
 					</Box>
 				</Container>
 			</ThemeProvider>
 		</ErrorBoundary>
-	);
-};
+	),
+});
 
 const Logo = () => (
 	<Box

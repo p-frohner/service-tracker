@@ -1,10 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { routeTree } from "./routeTree.gen"; // This file is auto-generated
 
-import { App } from "./components/App";
+const router = createRouter({ routeTree });
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -23,7 +24,7 @@ if (!root) {
 createRoot(root).render(
 	<StrictMode>
 		<QueryClientProvider client={queryClient}>
-			<App />
+			<RouterProvider router={router} />
 			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	</StrictMode>,
