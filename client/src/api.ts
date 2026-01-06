@@ -77,18 +77,6 @@ export interface Vehicle {
 /**
  * @summary Retrieve a list of vehicles
  */
-export type getVehiclesResponse200 = {
-  data: Vehicle[]
-  status: 200
-}
-    
-export type getVehiclesResponseSuccess = (getVehiclesResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getVehiclesResponse = (getVehiclesResponseSuccess)
-
 export const getGetVehiclesUrl = () => {
 
 
@@ -97,7 +85,7 @@ export const getGetVehiclesUrl = () => {
   return `/api/vehicles`
 }
 
-export const getVehicles = async ( options?: RequestInit): Promise<getVehiclesResponse> => {
+export const getVehicles = async ( options?: RequestInit): Promise<Vehicle[]> => {
   
   const res = await fetch(getGetVehiclesUrl(),
   {      
@@ -110,8 +98,8 @@ export const getVehicles = async ( options?: RequestInit): Promise<getVehiclesRe
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: getVehiclesResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as getVehiclesResponse
+  const data: Vehicle[] = body ? JSON.parse(body) : {}
+  return data
 }
 
 
@@ -196,18 +184,6 @@ export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, 
 /**
  * @summary Add a new vehicle
  */
-export type postVehiclesResponse201 = {
-  data: void
-  status: 201
-}
-    
-export type postVehiclesResponseSuccess = (postVehiclesResponse201) & {
-  headers: Headers;
-};
-;
-
-export type postVehiclesResponse = (postVehiclesResponseSuccess)
-
 export const getPostVehiclesUrl = () => {
 
 
@@ -216,7 +192,7 @@ export const getPostVehiclesUrl = () => {
   return `/api/vehicles`
 }
 
-export const postVehicles = async (vehicle: NonReadonly<Vehicle>, options?: RequestInit): Promise<postVehiclesResponse> => {
+export const postVehicles = async (vehicle: NonReadonly<Vehicle>, options?: RequestInit): Promise<void> => {
   
   const res = await fetch(getPostVehiclesUrl(),
   {      
@@ -230,8 +206,8 @@ export const postVehicles = async (vehicle: NonReadonly<Vehicle>, options?: Requ
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
   
-  const data: postVehiclesResponse['data'] = body ? JSON.parse(body) : {}
-  return { data, status: res.status, headers: res.headers } as postVehiclesResponse
+  const data: void = body ? JSON.parse(body) : {}
+  return data
 }
 
 

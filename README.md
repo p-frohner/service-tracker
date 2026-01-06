@@ -32,7 +32,8 @@ Start the server:
 
 ## todo
 
- - get GO serve the React build?
- - authentication
- - need better CORS handling
+- get GO serve the React build?
+- authentication
+- need better CORS handling
+- save to local storage or db instead of memory
 
