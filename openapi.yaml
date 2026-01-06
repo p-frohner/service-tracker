@@ -177,16 +177,16 @@ components:
         year:
           type: integer
           minimum: 1900
-          maximum: 2025 # TODO: can we make this dynamic or just leave that to the FE?
+          maximum: 2025
       required:
         - make
         - model
         - year
-securitySchemes:
-  bearerAuth:
-    type: http
-    scheme: bearer
-    bearerFormat: JWT
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 security:
   - bearerAuth: []
 tags:

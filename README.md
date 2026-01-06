@@ -6,8 +6,7 @@ The app allows users to log, organize, and access information about routine main
 
 With a focus on simplicity and efficiency, Service Tracker ensures that users can keep their vehicles in optimal condition by staying on top of service schedules and tracking costs over time.
 
-
-# Go Back End
+## Go Back End
 
 Start the server:
 
@@ -25,12 +24,15 @@ Clean cache
 
 ```go clean -cache```
 
-# React + TypeScript Front End
+## React + TypeScript Front End
 
 Start the server:
 
 ```npm run dev```
 
-## React Compiler
+## todo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ - get GO serve the React build?
+ - authentication
+ - need better CORS handling
+
