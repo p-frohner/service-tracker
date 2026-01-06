@@ -15,7 +15,7 @@ Start the server:
 
 Generate types from the openapi spec:
 
-```oapi-codegen --config server.cfg.yaml openapi.yaml```
+```oapi-codegen --config server.cfg.yaml ../openapi.yaml```
 
 Ensure .mod file references are accurate
 

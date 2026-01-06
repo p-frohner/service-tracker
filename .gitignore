@@ -1,28 +1,29 @@
 # Standard Go Build Artifacts
 ############################
-*.exe
-*.test
-*.out
 
-/pkg/*
-!/pkg/api/
-!/pkg/api/server.gen.go
+/server/*.exe
+/server/*.test
+/server/*.out
 
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+/server/pkg/*
+!/server/pkg/api/
+!/server/pkg/api/server.gen.go
 
-node_modules
-dist
-dist-ssr
-*.local
+# Logs and IDE configs
+############################
 
-# Editor directories and files
+/client/logs
+/client/*.log
+/client/npm-debug.log*
+/client/yarn-debug.log*
+/client/yarn-error.log*
+/client/pnpm-debug.log*
+/client/lerna-debug.log*
+/client/node_modules
+/client/dist
+/client/dist-ssr
+/client/*.local
+
 .vscode/*
 !.vscode/extensions.json
 .idea
