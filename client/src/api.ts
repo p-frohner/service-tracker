@@ -5,6 +5,25 @@
  * An API to track vehicle maintenance records.
  * OpenAPI spec version: 0.0.1
  */
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
+import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
+  MutationFunction,
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
+  UseMutationOptions,
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
+} from '@tanstack/react-query';
+
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
@@ -97,6 +116,83 @@ export const getVehicles = async ( options?: RequestInit): Promise<getVehiclesRe
 
 
 
+
+
+export const getGetVehiclesQueryKey = () => {
+    return [
+    `/api/vehicles`
+    ] as const;
+    }
+
+    
+export const getGetVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, fetch?: RequestInit}
+) => {
+
+const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetVehiclesQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVehicles>>> = ({ signal }) => getVehicles({ signal, ...fetchOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetVehiclesQueryResult = NonNullable<Awaited<ReturnType<typeof getVehicles>>>
+export type GetVehiclesQueryError = unknown
+
+
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getVehicles>>,
+          TError,
+          Awaited<ReturnType<typeof getVehicles>>
+        > , 'initialData'
+      >, fetch?: RequestInit}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getVehicles>>,
+          TError,
+          Awaited<ReturnType<typeof getVehicles>>
+        > , 'initialData'
+      >, fetch?: RequestInit}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, fetch?: RequestInit}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Retrieve a list of vehicles
+ */
+
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, fetch?: RequestInit}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetVehiclesQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
 /**
  * @summary Add a new vehicle
  */
@@ -137,3 +233,52 @@ export const postVehicles = async (vehicle: NonReadonly<Vehicle>, options?: Requ
   const data: postVehiclesResponse['data'] = body ? JSON.parse(body) : {}
   return { data, status: res.status, headers: res.headers } as postVehiclesResponse
 }
+
+
+
+
+export const getPostVehiclesMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, fetch?: RequestInit}
+): UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext> => {
+
+const mutationKey = ['postVehicles'];
+const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, fetch: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postVehicles>>, {data: NonReadonly<Vehicle>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postVehicles(data,fetchOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostVehiclesMutationResult = NonNullable<Awaited<ReturnType<typeof postVehicles>>>
+    export type PostVehiclesMutationBody = NonReadonly<Vehicle>
+    export type PostVehiclesMutationError = unknown
+
+    /**
+ * @summary Add a new vehicle
+ */
+export const usePostVehicles = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, fetch?: RequestInit}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postVehicles>>,
+        TError,
+        {data: NonReadonly<Vehicle>},
+        TContext
+      > => {
+
+      const mutationOptions = getPostVehiclesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }

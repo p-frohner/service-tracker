@@ -1,11 +1,22 @@
-import { Box, Container, CssBaseline, Divider, Stack, ThemeProvider } from "@mui/material";
+import {
+	Box,
+	Container,
+	CssBaseline,
+	Divider,
+	Stack,
+	ThemeProvider,
+} from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
+
 import logo from "/logo.png";
-import { theme } from "./themeProvider";
+
+import { theme } from "../themeProvider";
 
 export const App = () => {
 	return (
-		<ErrorBoundary FallbackComponent={({ error }) => <pre>{error.message}</pre>}>
+		<ErrorBoundary
+			FallbackComponent={({ error }) => <pre>{error.message}</pre>}
+		>
 			<CssBaseline />
 			<ThemeProvider theme={theme}>
 				<Container maxWidth="lg">
@@ -39,7 +50,13 @@ const Content = () => {
 				/>
 			</Box>
 
-			<Divider sx={{ height: 4, borderBottom: "none", backgroundColor: "primary.dark" }} />
+			<Divider
+				sx={{
+					height: 4,
+					borderBottom: "none",
+					backgroundColor: "primary.dark",
+				}}
+			/>
 			<Stack direction="row" spacing={2} padding={4}>
 				<Box>Item 1</Box>
 				<Box>Item 2</Box>
