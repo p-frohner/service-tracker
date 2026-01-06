@@ -37,6 +37,10 @@ export const AddVehicleDialog = ({
 				reset();
 				onClose();
 			},
+			onError: (error) => {
+				// TODO: show a notification about the error
+				console.error("Mutation failed, keeping dialog open.", error);
+			},
 		},
 	});
 
@@ -78,7 +82,13 @@ export const AddVehicleDialog = ({
 							name="year"
 							control={control}
 							render={({ field }) => (
-								<TextField {...field} type="number" label="Year" fullWidth />
+								<TextField
+									{...field}
+									type="number"
+									label="Year"
+									fullWidth
+									onChange={(e) => field.onChange(Number(e.target.value))}
+								/>
 							)}
 						/>
 					</Stack>

@@ -1,4 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+	MutationCache,
+	QueryClient,
+	QueryClientProvider,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
@@ -13,6 +17,11 @@ const queryClient = new QueryClient({
 			staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
 		},
 	},
+	mutationCache: new MutationCache({
+		onError: (error) => {
+			console.error("Mutation error:", error.message);
+		},
+	}),
 });
 
 const root = document.getElementById("root");

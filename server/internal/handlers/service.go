@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -54,7 +55,24 @@ func (s *Server) PostVehicles(w http.ResponseWriter, r *http.Request) {
 	// If request body is invalid, return an error
 	err := json.NewDecoder(r.Body).Decode(&newVehicle)
 	if err != nil {
-		http.Error(w, "Invalid request body or JSON format", http.StatusBadRequest)
+		var unmarshalErr *json.UnmarshalTypeError
+		var errorDetail string
+
+		if errors.As(err, &unmarshalErr) {
+				// This builds a human-readable string from the Go error details
+				errorDetail = fmt.Sprintf("Field '%s' expects a %s, but %s was provided!", 
+					unmarshalErr.Field, unmarshalErr.Type, unmarshalErr.Value)
+		} else {
+				errorDetail = "Invalid JSON format: " + err.Error()
+		}
+
+		// Return the JSON with the "message" property the frontend expects
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		
+		json.NewEncoder(w).Encode(map[string]string{
+				"message": errorDetail,
+		})
 		return
 	}
 

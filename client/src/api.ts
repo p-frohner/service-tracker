@@ -24,6 +24,7 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query';
 
+import { customFetch } from './custom-fetch';
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
@@ -74,6 +75,10 @@ export interface Vehicle {
   year: number;
 }
 
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
+
 /**
  * @summary Retrieve a list of vehicles
  */
@@ -87,20 +92,14 @@ export const getGetVehiclesUrl = () => {
 
 export const getVehicles = async ( options?: RequestInit): Promise<Vehicle[]> => {
   
-  const res = await fetch(getGetVehiclesUrl(),
+  return customFetch<Vehicle[]>(getGetVehiclesUrl(),
   {      
     ...options,
     method: 'GET'
     
     
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: Vehicle[] = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
@@ -113,16 +112,16 @@ export const getGetVehiclesQueryKey = () => {
     }
 
     
-export const getGetVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, fetch?: RequestInit}
+export const getGetVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
-const {query: queryOptions, fetch: fetchOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetVehiclesQueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVehicles>>> = ({ signal }) => getVehicles({ signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVehicles>>> = ({ signal }) => getVehicles({ signal, ...requestOptions });
 
       
 
@@ -142,7 +141,7 @@ export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, 
           TError,
           Awaited<ReturnType<typeof getVehicles>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
@@ -152,11 +151,11 @@ export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, 
           TError,
           Awaited<ReturnType<typeof getVehicles>>
         > , 'initialData'
-      >, fetch?: RequestInit}
+      >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
@@ -164,7 +163,7 @@ export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, 
  */
 
 export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, fetch?: RequestInit}
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
@@ -194,7 +193,7 @@ export const getPostVehiclesUrl = () => {
 
 export const postVehicles = async (vehicle: NonReadonly<Vehicle>, options?: RequestInit): Promise<void> => {
   
-  const res = await fetch(getPostVehiclesUrl(),
+  return customFetch<void>(getPostVehiclesUrl(),
   {      
     ...options,
     method: 'POST',
@@ -202,27 +201,21 @@ export const postVehicles = async (vehicle: NonReadonly<Vehicle>, options?: Requ
     body: JSON.stringify(
       vehicle,)
   }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
-  
-  const data: void = body ? JSON.parse(body) : {}
-  return data
-}
+);}
 
 
 
 
 export const getPostVehiclesMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext> => {
 
 const mutationKey = ['postVehicles'];
-const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, fetch: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -230,7 +223,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postVehicles>>, {data: NonReadonly<Vehicle>}> = (props) => {
           const {data} = props ?? {};
 
-          return  postVehicles(data,fetchOptions)
+          return  postVehicles(data,requestOptions)
         }
 
         
@@ -246,7 +239,7 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
  * @summary Add a new vehicle
  */
 export const usePostVehicles = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, fetch?: RequestInit}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postVehicles>>,
         TError,
