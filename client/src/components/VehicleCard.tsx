@@ -1,5 +1,13 @@
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import {
+	Box,
+	Card,
+	CardActionArea,
+	CardContent,
+	Stack,
+	Typography,
+} from "@mui/material";
+
 import type { Vehicle } from "../api";
 
 type Props = {
@@ -21,17 +29,41 @@ export const VehicleCard = ({ vehicle, onSelect }: Props) => (
 	>
 		<CardActionArea
 			onClick={() => onSelect(vehicle)}
-			sx={{ height: "100%", p: 1 }}
+			sx={{ height: "100%", p: 1, justifyContent: "center" }}
 		>
-			<CardContent>
-				<DirectionsCarIcon color="primary" sx={{ fontSize: 40, mb: 1 }} />
-				<Typography variant="h5" component="div" sx={{ fontWeight: "bold" }}>
-					{vehicle.make} {vehicle.model}
-				</Typography>
-				<Typography variant="h6" color="text.secondary">
-					{vehicle.year}
-				</Typography>
+			<CardContent sx={{ padding: "4px 8px" }}>
+				<Stack direction="row">
+					<Box display="flex" alignItems="center" mr={2}>
+						<DirectionsCarIcon
+							color="primary"
+							sx={{ fontSize: 60, verticalAlign: "middle" }}
+						/>
+					</Box>
+					<Stack direction="column" mr={2}>
+						<Typography variant="h6" color="text.secondary">
+							{vehicle.year}
+						</Typography>
+						<TextEllipsis text={vehicle.make} />
+						<TextEllipsis text={vehicle.model} />
+					</Stack>
+				</Stack>
 			</CardContent>
 		</CardActionArea>
 	</Card>
+);
+
+const TextEllipsis = ({ text }: { text: string }) => (
+	<Typography
+		variant="h5"
+		component="div"
+		sx={{
+			fontWeight: "bold",
+			textOverflow: "ellipsis",
+			overflow: "hidden",
+			whiteSpace: "nowrap",
+			maxWidth: "170px",
+		}}
+	>
+		{text}
+	</Typography>
 );

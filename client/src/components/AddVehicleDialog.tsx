@@ -43,11 +43,7 @@ export const AddVehicleDialog = ({
 	return (
 		<Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
 			<DialogTitle>Add New Vehicle</DialogTitle>
-			<Box
-				component="form"
-				onSubmit={handleSubmit((data) => mutate({ data }))}
-				padding={2}
-			>
+			<Box component="form" onSubmit={handleSubmit((data) => mutate({ data }))}>
 				<DialogContent>
 					<Stack spacing={2} sx={{ mt: 1 }}>
 						<Controller
@@ -87,7 +83,7 @@ export const AddVehicleDialog = ({
 						/>
 					</Stack>
 				</DialogContent>
-				<DialogActions>
+				<DialogActions sx={{ px: 3, pb: 3 }}>
 					<Button onClick={onClose}>Cancel</Button>
 					<Button type="submit" variant="contained" disabled={isPending}>
 						{isPending ? "Saving..." : "Add Vehicle"}

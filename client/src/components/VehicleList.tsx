@@ -1,4 +1,5 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+
 import { useGetVehicles, type Vehicle } from "../api";
 import { VehicleCard } from "./VehicleCard"; // Assuming you saved it here
 
@@ -11,7 +12,7 @@ export const VehicleList = ({
 
 	if (isLoading) {
 		return (
-			<Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+			<Box sx={{ display: "flex" }}>
 				<CircularProgress color="primary" />
 				<Typography sx={{ ml: 2 }}>Checking the garage...</Typography>
 			</Box>
@@ -43,7 +44,7 @@ export const VehicleList = ({
 	}
 
 	return (
-		<Grid container spacing={3}>
+		<Grid container spacing={3} justifyContent="center">
 			{vehicles?.map((vehicle) => (
 				<VehicleCard
 					key={vehicle.id}

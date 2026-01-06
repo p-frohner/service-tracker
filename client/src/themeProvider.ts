@@ -11,6 +11,14 @@ export const theme = createTheme({
 		},
 	},
 	components: {
+		MuiBackdrop: {
+			styleOverrides: {
+				root: {
+					backdropFilter: "blur(8px)",
+					backgroundColor: "rgba(0, 0, 0, 0.4)",
+				},
+			},
+		},
 		MuiButtonBase: {
 			defaultProps: {
 				disableRipple: true,
@@ -24,6 +32,13 @@ export const theme = createTheme({
 				root: {
 					textTransform: "none",
 					fontWeight: 600,
+					borderRadius: 10,
+				},
+			},
+		},
+		MuiDialog: {
+			styleOverrides: {
+				paper: {
 					borderRadius: 10,
 				},
 			},

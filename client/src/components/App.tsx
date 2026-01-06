@@ -27,7 +27,7 @@ export const App = () => {
 						</Box>
 						<Divider
 							sx={{
-								height: 4,
+								height: 8,
 								borderBottom: "none",
 								backgroundColor: "primary.dark",
 							}}

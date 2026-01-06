@@ -1,3 +1,4 @@
+import { Add } from "@mui/icons-material";
 import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import { AddVehicleDialog } from "./AddVehicleDialog";
@@ -8,12 +9,14 @@ export const VehicleManager = () => {
 
 	return (
 		<Stack spacing={2} direction="column" padding={2}>
-			<Box textAlign="right">
+			<Box textAlign="right" pb={2}>
 				<Button
 					variant="outlined"
+					size="large"
 					onClick={() => {
 						setIsAddDialogOpen(true);
 					}}
+					endIcon={<Add />}
 				>
 					Add Vehicle
 				</Button>
