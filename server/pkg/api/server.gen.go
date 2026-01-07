@@ -16,6 +16,7 @@ import (
 
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-chi/chi/v5"
+	"github.com/oapi-codegen/runtime"
 )
 
 const (
@@ -33,6 +34,9 @@ type Vehicle struct {
 // PostVehiclesJSONRequestBody defines body for PostVehicles for application/json ContentType.
 type PostVehiclesJSONRequestBody = Vehicle
 
+// PutVehiclesVehicleIdJSONRequestBody defines body for PutVehiclesVehicleId for application/json ContentType.
+type PutVehiclesVehicleIdJSONRequestBody = Vehicle
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Retrieve a list of vehicles
@@ -41,6 +45,15 @@ type ServerInterface interface {
 	// Add a new vehicle
 	// (POST /vehicles)
 	PostVehicles(w http.ResponseWriter, r *http.Request)
+	// Delete a vehicle
+	// (DELETE /vehicles/{vehicleId})
+	DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string)
+	// Retrieve a vehicle by ID
+	// (GET /vehicles/{vehicleId})
+	GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string)
+	// Update an existing vehicle
+	// (PUT /vehicles/{vehicleId})
+	PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -56,6 +69,24 @@ func (_ Unimplemented) GetVehicles(w http.ResponseWriter, r *http.Request) {
 // Add a new vehicle
 // (POST /vehicles)
 func (_ Unimplemented) PostVehicles(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Delete a vehicle
+// (DELETE /vehicles/{vehicleId})
+func (_ Unimplemented) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Retrieve a vehicle by ID
+// (GET /vehicles/{vehicleId})
+func (_ Unimplemented) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Update an existing vehicle
+// (PUT /vehicles/{vehicleId})
+func (_ Unimplemented) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -99,6 +130,99 @@ func (siw *ServerInterfaceWrapper) PostVehicles(w http.ResponseWriter, r *http.R
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostVehicles(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteVehiclesVehicleId operation middleware
+func (siw *ServerInterfaceWrapper) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "vehicleId" -------------
+	var vehicleId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "vehicleId", chi.URLParam(r, "vehicleId"), &vehicleId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "vehicleId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteVehiclesVehicleId(w, r, vehicleId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetVehiclesVehicleId operation middleware
+func (siw *ServerInterfaceWrapper) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "vehicleId" -------------
+	var vehicleId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "vehicleId", chi.URLParam(r, "vehicleId"), &vehicleId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "vehicleId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetVehiclesVehicleId(w, r, vehicleId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// PutVehiclesVehicleId operation middleware
+func (siw *ServerInterfaceWrapper) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "vehicleId" -------------
+	var vehicleId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "vehicleId", chi.URLParam(r, "vehicleId"), &vehicleId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "vehicleId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.PutVehiclesVehicleId(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -227,6 +351,15 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	r.Group(func(r chi.Router) {
 		r.Post(options.BaseURL+"/vehicles", wrapper.PostVehicles)
 	})
+	r.Group(func(r chi.Router) {
+		r.Delete(options.BaseURL+"/vehicles/{vehicleId}", wrapper.DeleteVehiclesVehicleId)
+	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/vehicles/{vehicleId}", wrapper.GetVehiclesVehicleId)
+	})
+	r.Group(func(r chi.Router) {
+		r.Put(options.BaseURL+"/vehicles/{vehicleId}", wrapper.PutVehiclesVehicleId)
+	})
 
 	return r
 }
@@ -234,16 +367,18 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/5RTzW7bPBB8FWK/7yjYSooCKW/uoUWKFgmaID0EPjDU2mYi/mS5cisEevdiKcuGEx/S",
-	"i0Rid2Y5w+EL2OhTDBg4g36BbDfoTVne4cbZFmWZKCYkdlgKrpEvoWmuQtuDZuqwAu4TgobM5MIahgq8",
-	"eSrgt4XYYHuy0qMhKXjzx/nOgz6vzz9W4F0Yt2ef6no/yQXGNRIMQwWEz50jbEDfj3OnKTvO5R4VHx7R",
-	"cgFltB057m9E8yjtAQ0hLTreHHZfInnDoOHbr1uoRoeEaazCnnnDnGAQYhdWUfANZksusYsBNCyCWlxf",
-	"Ko6KydgntR39Vd6IkmCCRUVoIzV5JqyOxXy4Qdo6i+pWQEjCARVskfJIW8/q2ZmYFxMGkxxo+DCrZzVU",
-	"kAxviqz5blbZrJHlJzdq5GiXDWj4inw39YidOcWQx/7zupafjXLKAjUptc4W8Pwxyymm4JR4MPoC/J9w",
-	"BRr+mx8iNt/laz6Fa9jbZ4hMP/r3yjfVuswqrtReRbm9zntDPWj4iUwOt6jMic4KUswnBF/HfKz4ucPM",
-	"n2PT/5PYd2k8Tqg8l+GNx2dvA7PDK0toGBuVO2sx51XXtv0rCxZNo4wK+HtSPg6dEg76/jjb98thKWWS",
-	"HJXq8ejv0ZpWNbjFNiaPgdXYCxV01O7CrufzVvo2MbO+qC9qEFI261OMV5P7WRG2RQ/Hwz1VEEx5VXeH",
-	"m3sfxYnnc2D7cSjCsBz+BgAA//+p8cji7gQAAA==",
+	"H4sIAAAAAAAC/8RVz2/bOgz+VwS+dzRit68P6PMtD8WGDBtarF12KHJQZSZRa0sqRWc1Av/vg+Q4v9N2",
+	"h2GX2ArFj+THj/QSlK2cNWjYQ74Er+ZYyfg6xrlWJYZXR9YhscZo0EX4JZTFtSkbyJlqTIAbh5CDZ9Jm",
+	"Bm0ClXyKzocGW2B51NKgpGCo5Iuu6gry8+z83wQqbbrj2X9Zto6kDeMMCdo2AcLnWhMWkN93cfsoK8zJ",
+	"2ss+PKLi6ORR1aS5uQ01d6U9oCSkYc3zzemDpUoy5PDp+x0kHUMBqbPCGnnO7KANwNpMbfAv0CvSjrU1",
+	"kMPQiOHNSLAVTFI9iUXHr6hkqMRIo1AQKkuFHwRUzYF8uEVaaIXiLjghBQxIYIHkO9hskA3OAnnWoZFO",
+	"Qw7/DLJBBgk4yfNYVrqKFQ8z5PAIHZUhtVEBOXxEHvd3Ap3eWeO7++dZFh7Khiyjq3Su1Co6p48+ZNEL",
+	"J8qDsYqOfxNOIYe/0o3E0pW+0l5c7Zo+SSSbjr893kSpPQs7FesqYvfqqpLUQA5fkUnjAoU8cjMBZ/2R",
+	"gm+s3634uUbP/9ui+aVi31XjrkLDuLQHHJ8dCmblLxShZCyEr5VC76d1WTZ7FAyLQkhh8EdfebSv254u",
+	"V2+jou3ilMh4SMpV/L+nZdz7HCri4nS2Hfar2XZhhNwkm7ypyleSyX5Px/ZV2M9rv0ESuHiNB2NZTG1t",
+	"itNq7REfGjG6ilKVJCtkJA/5/RJ0wAtDDAkYGZfOYoeGbUklWzXuLdZ2koCrjw1BfYLfPzwM2Wlaa1e8",
+	"NQzf4hUhjcAX7Vmb2dZUbO39yPH2xr+fBKY80qLvwG4On62SpShwgaV1FRoW3V1IoKZy9QnI07QM9+bW",
+	"c36ZXWYQQFnOjiFe9+3wgrCMhbHdbK9128ebffY+iCMflQ3al40R2kn7MwAA//9KYNGZBAgAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

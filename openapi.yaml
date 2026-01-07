@@ -30,40 +30,40 @@ paths:
       responses:
         '201':
           description: Vehicle created successfully
-  # /vehicles/{vehicleId}:
-  #   parameters:
-  #     - in: path
-  #       name: vehicleId
-  #       required: true
-  #       schema:
-  #         type: string
-  #   get:
-  #     summary: Retrieve a vehicle by ID
-  #     responses:
-  #       '200':
-  #         description: A vehicle object
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Vehicle'
-  #       '404':
-  #         description: Vehicle not found
-  #   put:
-  #     summary: Update an existing vehicle
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Vehicle'
-  #     responses:
-  #       '200':
-  #         description: Vehicle updated successfully
-  #   delete:
-  #     summary: Delete a vehicle
-  #     responses:
-  #       '204':
-  #         description: Vehicle deleted successfully
+  /vehicles/{vehicleId}:
+    parameters:
+      - in: path
+        name: vehicleId
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve a vehicle by ID
+      responses:
+        '200':
+          description: A vehicle object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
+        '404':
+          description: Vehicle not found
+    put:
+      summary: Update an existing vehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vehicle'
+      responses:
+        '200':
+          description: Vehicle updated successfully
+    delete:
+      summary: Delete a vehicle
+      responses:
+        '204':
+          description: Vehicle deleted successfully
   # /vehicles/{vehicleId}/maintenance:
   #   get:
   #     summary: Retrieve maintenance records for a vehicle

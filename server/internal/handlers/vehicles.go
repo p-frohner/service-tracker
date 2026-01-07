@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"service-tracker/pkg/api"
@@ -36,27 +35,8 @@ func (s *Server) GetVehicles(w http.ResponseWriter, r *http.Request) {
 func (s *Server) PostVehicles(w http.ResponseWriter, r *http.Request) {
 	var newVehicle api.Vehicle
 
-	// If request body is invalid, return an error
-	err := json.NewDecoder(r.Body).Decode(&newVehicle)
-	if err != nil {
-		var unmarshalErr *json.UnmarshalTypeError
-		var errorDetail string
-
-		if errors.As(err, &unmarshalErr) {
-			// This builds a human-readable string from the Go error details
-			errorDetail = fmt.Sprintf("Field '%s' expects a %s, but %s was provided!",
-				unmarshalErr.Field, unmarshalErr.Type, unmarshalErr.Value)
-		} else {
-			errorDetail = "Invalid JSON format: " + err.Error()
-		}
-
-		// Return the JSON with the "message" property the frontend expects
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-
-		json.NewEncoder(w).Encode(map[string]string{
-			"message": errorDetail,
-		})
+	// Validate the request body
+	if err := s.validateRequest(w, r, &newVehicle); err != nil {
 		return
 	}
 
@@ -70,4 +50,64 @@ func (s *Server) PostVehicles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(newVehicle)
+}
+
+// DeleteVehiclesVehicleId handles DELETE /vehicles/{vehicleId}
+func (s *Server) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	s.Mu.Lock()
+	defer s.Mu.Unlock()
+
+	// Check if the vehicle exists
+	if _, exists := s.Vehicles[vehicleId]; !exists {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Remove from the map
+	delete(s.Vehicles, vehicleId)
+
+	// 204 No Content is the standard response for a successful deletion
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// GetVehiclesVehicleId handles GET /vehicles/{vehicleId}
+func (s *Server) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	s.Mu.Lock()
+	defer s.Mu.Unlock()
+
+	vehicle, exists := s.Vehicles[vehicleId]
+	if !exists {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(vehicle)
+}
+
+// PutVehiclesVehicleId handles PUT /vehicles/{vehicleId}
+func (s *Server) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	var updatedVehicle api.Vehicle
+
+	// Validate the request body
+	if err := s.validateRequest(w, r, &updatedVehicle); err != nil {
+		return
+	}
+
+	s.Mu.Lock()
+	defer s.Mu.Unlock()
+
+	if _, exists := s.Vehicles[vehicleId]; !exists {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	// Ensure the ID in the body matches the URL or stay consistent
+	updatedVehicle.Id = &vehicleId
+	s.Vehicles[vehicleId] = updatedVehicle
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(updatedVehicle)
 }
