@@ -2,7 +2,7 @@
 
 Start the server:
 
-```go run cmd/server/main.go```
+```go run cmd/api/main.go```
 
 Generate types from the openapi spec:
 

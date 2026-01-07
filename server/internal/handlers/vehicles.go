@@ -4,26 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
 	"net/http"
 	"service-tracker/pkg/api"
-	"sync"
 	"time"
 )
-
-type Server struct {
-	Vehicles map[string]api.Vehicle
-	// Records  map[string]map[string]api.MaintenanceRecord
-	Mu sync.Mutex
-}
-
-func NewServer() *Server {
-	return &Server{
-		Vehicles: make(map[string]api.Vehicle),
-		// Records:  make(map[string]map[string]api.MaintenanceRecord),
-		Mu: sync.Mutex{},
-	}
-}
 
 // GetVehicles handles GET /vehicles
 // It retrieves all vehicles currently stored in the in-memory map.
