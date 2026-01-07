@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
-
 	"service-tracker/internal/handlers"
 	"service-tracker/pkg/api"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 )
