@@ -3,11 +3,7 @@ import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useGetVehicles, type Vehicle } from "../api";
 import { VehicleCard } from "./VehicleCard"; // Assuming you saved it here
 
-export const VehicleList = ({
-	onSelect,
-}: {
-	onSelect: (vehicle: Vehicle) => void;
-}) => {
+export const VehicleList = ({ onSelect }: { onSelect: (vehicle: Vehicle) => void }) => {
 	const { data: vehicles, isLoading, error } = useGetVehicles();
 
 	if (isLoading) {
@@ -20,11 +16,7 @@ export const VehicleList = ({
 	}
 
 	if (error) {
-		return (
-			<Typography color="error">
-				Error loading vehicles. Is the Go server running?
-			</Typography>
-		);
+		return <Typography color="error">Error loading vehicles. Is the Go server running?</Typography>;
 	}
 
 	if (!vehicles || vehicles?.length === 0) {

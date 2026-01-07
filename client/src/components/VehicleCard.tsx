@@ -1,12 +1,5 @@
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import {
-	Box,
-	Card,
-	CardActionArea,
-	CardContent,
-	Stack,
-	Typography,
-} from "@mui/material";
+import { Box, Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
 
 import type { Vehicle } from "../api";
 
@@ -34,10 +27,7 @@ export const VehicleCard = ({ vehicle, onSelect }: Props) => (
 			<CardContent sx={{ padding: "4px 8px" }}>
 				<Stack direction="row">
 					<Box display="flex" alignItems="center" mr={2}>
-						<DirectionsCarIcon
-							color="primary"
-							sx={{ fontSize: 60, verticalAlign: "middle" }}
-						/>
+						<DirectionsCarIcon color="primary" sx={{ fontSize: 60, verticalAlign: "middle" }} />
 					</Box>
 					<Stack direction="column" mr={2}>
 						<Typography variant="h6" color="text.secondary">

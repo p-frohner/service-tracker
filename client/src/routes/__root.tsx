@@ -1,10 +1,4 @@
-import {
-	Box,
-	Container,
-	CssBaseline,
-	Divider,
-	ThemeProvider,
-} from "@mui/material";
+import { Box, Container, CssBaseline, Divider, ThemeProvider } from "@mui/material";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 import { ErrorBoundary } from "react-error-boundary";
@@ -14,9 +8,7 @@ import { theme } from "../themeProvider";
 
 export const Route = createRootRoute({
 	component: () => (
-		<ErrorBoundary
-			FallbackComponent={({ error }) => <pre>{error.message}</pre>}
-		>
+		<ErrorBoundary FallbackComponent={({ error }) => <pre>{error.message}</pre>}>
 			<CssBaseline />
 			<ThemeProvider theme={theme}>
 				<Container maxWidth="lg">

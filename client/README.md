@@ -4,6 +4,7 @@ Start the server:
 
 ```npm run dev```
 
-## React Compiler
+Generate the types and hooks for Tanstack Query from the openapi spec.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```npm run api:generate```
+

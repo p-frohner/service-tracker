@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
+
 import { getGetVehiclesQueryKey, usePostVehicles } from "../api";
 
 type FormValues = {
@@ -18,13 +19,7 @@ type FormValues = {
 	year: number;
 };
 
-export const AddVehicleDialog = ({
-	open,
-	onClose,
-}: {
-	open: boolean;
-	onClose: () => void;
-}) => {
+export const AddVehicleDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
 	const queryClient = useQueryClient();
 	const { control, handleSubmit, reset } = useForm<FormValues>({
 		defaultValues: { make: "", model: "", year: 2013 },
@@ -36,10 +31,6 @@ export const AddVehicleDialog = ({
 				queryClient.invalidateQueries({ queryKey: getGetVehiclesQueryKey() });
 				reset();
 				onClose();
-			},
-			onError: (error) => {
-				// TODO: show a notification about the error
-				console.error("Mutation failed, keeping dialog open.", error);
 			},
 		},
 	});
@@ -87,7 +78,7 @@ export const AddVehicleDialog = ({
 									type="number"
 									label="Year"
 									fullWidth
-									onChange={(e) => field.onChange(Number(e.target.value))}
+									onChange={(e) => field.onChange(String(e.target.value))}
 								/>
 							)}
 						/>
