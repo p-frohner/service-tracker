@@ -78,6 +78,7 @@ export const theme = createTheme({
 			styleOverrides: {
 				root: {
 					"& legend": { display: "none" },
+					"& .MuiOutlinedInput-notchedOutline": { top: "0" },
 				},
 			},
 		},

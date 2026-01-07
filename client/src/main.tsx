@@ -3,7 +3,9 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { NotificationSnackbar } from "./components/NotificationSnackbar";
 import { routeTree } from "./routeTree.gen"; // This file is auto-generated
+import { showGlobalNotification } from "./utils/notificationHandler";
 
 const router = createRouter({ routeTree });
 
@@ -15,7 +17,8 @@ const queryClient = new QueryClient({
 	},
 	mutationCache: new MutationCache({
 		onError: (error) => {
-			console.error("Mutation error:", error.message);
+			const msg = error?.message || "An unexpected error occurred";
+			showGlobalNotification(msg, "error");
 		},
 	}),
 });
@@ -29,6 +32,7 @@ if (!root) {
 createRoot(root).render(
 	<StrictMode>
 		<QueryClientProvider client={queryClient}>
+			<NotificationSnackbar />
 			<RouterProvider router={router} />
 			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
