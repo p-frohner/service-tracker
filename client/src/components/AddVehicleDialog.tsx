@@ -78,7 +78,7 @@ export const AddVehicleDialog = ({ open, onClose }: { open: boolean; onClose: ()
 									type="number"
 									label="Year"
 									fullWidth
-									onChange={(e) => field.onChange(String(e.target.value))}
+									onChange={(e) => field.onChange(Number(e.target.value))}
 								/>
 							)}
 						/>
