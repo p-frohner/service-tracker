@@ -9,6 +9,7 @@ import (
 
 func (s *Server) validateRequest(w http.ResponseWriter, r *http.Request, v interface{}) error {
 	err := json.NewDecoder(r.Body).Decode(v)
+
 	if err != nil {
 		var unmarshalErr *json.UnmarshalTypeError
 		var errorDetail string

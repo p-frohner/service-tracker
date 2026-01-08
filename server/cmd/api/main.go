@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"service-tracker/internal/handlers"
+	"service-tracker/internal/middleware"
 	"service-tracker/pkg/api"
 	"time"
 
@@ -17,6 +18,9 @@ func main() {
 
 	// Use the generated wrapper to create a Chi router
 	router := chi.NewRouter()
+
+	// Use our custom middleware to log requests
+	router.Use(middleware.RequestLogger)
 
 	// This generated function connects the chi router to your ServerInterface implementation
 	api.HandlerFromMux(appServer, router)
