@@ -1,18 +1,19 @@
 package handlers
 
 import (
-	"service-tracker/pkg/api"
-	"sync"
+	"service-tracker/internal/db"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Server struct {
-	Vehicles map[string]api.Vehicle
-	Mu       sync.Mutex
+	Pool    *pgxpool.Pool
+	Queries *db.Queries
 }
 
-func NewServer() *Server {
+func NewServer(pool *pgxpool.Pool) *Server {
 	return &Server{
-		Vehicles: make(map[string]api.Vehicle),
-		Mu:       sync.Mutex{},
+		Pool:    pool,
+		Queries: db.New(pool), // sqlc helper that links queries to the pool
 	}
 }

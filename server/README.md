@@ -1,6 +1,6 @@
-# 🏎️ Service Tracker - Go Backend
+# Service Tracker - Go Backend
 
-This is the Go backend for the vehicle maintenance tracker. It uses a contract-first and schema-first architecture to ensure the API and Database are always in sync.
+This is the Go backend for the service tracker. It uses a contract-first and schema-first architecture to ensure the API and Database are always in sync.
 
 ## Tech Stack
  - Language: Go 1.21+
@@ -9,7 +9,7 @@ This is the Go backend for the vehicle maintenance tracker. It uses a contract-f
  - Codegen: sqlc (SQL to Go) and oapi-codegen (OpenAPI to Go)
 
 ### Database Setup
-Ensure Postgres is running and the vehicle_tracker database exists.
+Ensure Postgres is running and the service_tracker database exists.
 
 Run this whenever you modify schema.sql or query.sql:
 
@@ -29,4 +29,3 @@ oapi-codegen --config server.cfg.yaml ../openapi.yaml
 ```
 go run cmd/api/main.go 
 ```
-

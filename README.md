@@ -1,4 +1,4 @@
-# Service tracker
+# 🏎️ Service tracker
 
 Exploring Golang by building Service Tracker—a simple Go + React app to manage vehicle maintenance history and costs. Yes, I realized a few days in how misleading the name sounds for a dev project! 🤷‍♂️
 
@@ -23,11 +23,9 @@ To learn more about the server or the client:
 [Client README.MD](client/README.md)
 
 
-## todo
+## A long way to *Go*
 
 - consider using docker
-- get GO serve the React build?
 - authentication
-- need better CORS handling
-- save to local storage or db instead of memory
+- need to improve CORS handling
 

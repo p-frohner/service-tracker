@@ -1,35 +1,50 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"service-tracker/internal/handlers"
 	"service-tracker/internal/middleware"
 	"service-tracker/pkg/api"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
-	// Initialize handler implementation
-	appServer := handlers.NewServer()
+	ctx := context.Background()
 
-	// Use the generated wrapper to create a Chi router
+	// Database connection setup
+	connStr := "postgres://postgres:postgres@localhost:5432/service_tracker"
+	pool, err := pgxpool.New(ctx, connStr)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer pool.Close()
+
+	err = pool.Ping(ctx)
+	if err != nil {
+		log.Fatalf("Unable to ping database: %v", err)
+	}
+
+	log.Println("Successfully connected to the database!")
+
+	// Create the server and apply the handlers
+	server := handlers.NewServer(pool)
 	router := chi.NewRouter()
-
-	// Use our custom middleware to log requests
 	router.Use(middleware.RequestLogger)
 
-	// This generated function connects the chi router to your ServerInterface implementation
-	api.HandlerFromMux(appServer, router)
+	api.HandlerFromMux(server, router)
 
-	// Define the port (using the port you set in OpenAPI, e.g., 8080)
+	// Set up and start the HTTP server
 	port := "8080"
 	serverAddr := fmt.Sprintf(":%s", port)
 
-	// Set up the HTTP server configuration
 	s := &http.Server{
 		Addr:         serverAddr,
 		Handler:      router,
@@ -38,11 +53,9 @@ func main() {
 		IdleTimeout:  15 * time.Second,
 	}
 
-	// Start the server
 	log.Printf("Service Tracker Server starting on http://localhost%s", serverAddr)
 
 	if err := s.ListenAndServe(); err != http.ErrServerClosed {
-		// Log a fatal error if the server fails to start
 		log.Fatalf("Server failed: %v", err)
 	}
 }

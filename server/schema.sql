@@ -7,14 +7,3 @@ CREATE TABLE vehicles (
     year       INTEGER NOT NULL CHECK (year >= 1900 AND year <= 2025),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-
-CREATE TABLE maintenance_records (
-    id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    vehicle_id  UUID NOT NULL REFERENCES vehicles(id) ON DELETE CASCADE,
-    cost        DECIMAL(12, 2), 
-    date        DATE NOT NULL,
-    description TEXT NOT NULL,
-    mileage     INTEGER NOT NULL CHECK (mileage >= 0),
-    notes       TEXT,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
