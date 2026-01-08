@@ -1,37 +1,31 @@
 # Service tracker
 
-Service Tracker is a vehicle service record tracking application designed to help users manage and maintain detailed records of their vehicle's service history. 
+Exploring Golang by building Service Tracker—a simple Go + React app to manage vehicle maintenance history and costs. Yes, I realized a few days in how misleading the name sounds for a dev project! 🤷‍♂️
 
-The app allows users to log, organize, and access information about routine maintenance, repairs, and inspections. 
+## Prerequisites
+To run this project locally, you need to install:
 
-With a focus on simplicity and efficiency, Service Tracker ensures that users can keep their vehicles in optimal condition by staying on top of service schedules and tracking costs over time.
+ - Node. js (v14 or later)
+ - npm or yarn (for managing dependencies)
+ - Go (1.21+): The programming language runtime. [Install Go](https://go.dev/doc/install)
+ - PostgreSQL (15+): The database engine. [Postgres App](https://postgresapp.com/) (Mac) or [EnterpriseDB](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads) (Windows).
+ - sqlc: For generating type-safe Go from SQL.
 
-## Go Back End
+```go
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+```
 
-Start the server:
+## How it works
+To learn more about the server or the client:
 
-```go run cmd/server/main.go```
+[Server README.MD](server/README.md)
 
-Generate types from the openapi spec:
+[Client README.MD](client/README.md)
 
-```oapi-codegen --config server.cfg.yaml ../openapi.yaml```
-
-Ensure .mod file references are accurate
-
-```go mod tidy```
-
-Clean cache
-
-```go clean -cache```
-
-## React + TypeScript Front End
-
-Start the server:
-
-```npm run dev```
 
 ## todo
 
+- consider using docker
 - get GO serve the React build?
 - authentication
 - need better CORS handling

@@ -1,16 +1,16 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 
 import { useGetVehicles, type Vehicle } from "../api";
-import { VehicleCard } from "./VehicleCard"; // Assuming you saved it here
+import { VehicleCard } from "./VehicleCard";
 
 export const VehicleList = ({ onSelect }: { onSelect: (vehicle: Vehicle) => void }) => {
 	const { data: vehicles, isLoading, error } = useGetVehicles();
 
 	if (isLoading) {
 		return (
-			<Box sx={{ display: "flex" }}>
+			<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
 				<CircularProgress color="primary" />
-				<Typography sx={{ ml: 2 }}>Checking the garage...</Typography>
+				<Typography sx={{ ml: 2 }}>Loading...</Typography>
 			</Box>
 		);
 	}
