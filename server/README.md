@@ -3,15 +3,15 @@
 This is the Go backend for the vehicle maintenance tracker. It uses a contract-first and schema-first architecture to ensure the API and Database are always in sync.
 
 ## Tech Stack
-Language: Go 1.21+
-API Spec: OpenAPI 3.0
-Database: PostgreSQL (via Postgres.app)
-Codegen: sqlc (SQL to Go) and oapi-codegen (OpenAPI to Go)
+ - Language: Go 1.21+
+ - API Spec: OpenAPI 3.0
+ - Database: PostgreSQL (via Postgres.app)
+ - Codegen: sqlc (SQL to Go) and oapi-codegen (OpenAPI to Go)
 
 ### Database Setup
 Ensure Postgres is running and the vehicle_tracker database exists.
 
-Generate Go code from SQL: Run this whenever you modify schema.sql or query.sql:
+Run this whenever you modify schema.sql or query.sql:
 
 ```
 sqlc generate
@@ -27,6 +27,6 @@ oapi-codegen --config server.cfg.yaml ../openapi.yaml
 ### Run the Application
 
 ```
-go run ./cmd/api/main.go 
+go run cmd/api/main.go 
 ```
 
