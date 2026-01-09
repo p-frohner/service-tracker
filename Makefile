@@ -16,7 +16,7 @@ generate: ## Run codegen for the server (sqlc and oapi-codegen)
 run-server: ## Run the Go backend with hot reload (Air)
 	cd server && air --build.cmd "go build -o tmp/main ./cmd/api/main.go" --build.bin "./tmp/main"
 
-run-client: ## Run the React frontend clientlocally
+run-client: ## Run the React frontend client
 	cd client && npm run dev
 
 docker-up: ## Start everything via Docker Compose (including DB)
