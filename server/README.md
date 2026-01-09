@@ -8,17 +8,30 @@ This is the Go backend for the service tracker. It uses a contract-first and sch
  - Database: PostgreSQL (via Postgres.app)
  - Codegen: sqlc (SQL to Go) and oapi-codegen (OpenAPI to Go)
 
-### Database Setup
-Ensure Postgres is running and the service_tracker database exists.
+## Local development
 
-Run this whenever you modify schema.sql or query.sql:
+### Prerequisites
+To run this project locally, you need to install:
+
+ - Go (1.21+): The programming language runtime. [Install Go](https://go.dev/doc/install)
+ - PostgreSQL (15+): The database engine. [Postgres App](https://postgresapp.com/) (Mac) or [EnterpriseDB](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads) (Windows).
+ - sqlc: For generating type-safe Go from SQL.
+
+```go
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+```
+
+### Database Setup (sqlc)
+Ensure Postgres is running and the "service_tracker" database exists.
+
+When you modify schema.sql (tables) or query.sql (queries), regenerate the database layer:
 
 ```
 sqlc generate
 ```
 
-### API Setup
-Generate Server Boilerplate: Run this whenever you modify the root openapi.yaml:
+### API Setup (oapi)
+When you modify the OpenAPI specification (api.yaml), regenerate the server boilerplate:
 
 ```
 oapi-codegen --config server.cfg.yaml ../openapi.yaml

@@ -12,14 +12,18 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/cors"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
 	ctx := context.Background()
 
-	// Database connection setup
-	connStr := "postgres://postgres:postgres@localhost:5432/service_tracker"
+	connStr := os.Getenv("DATABASE_URL") // from docker-compose.yml
+	if connStr == "" {
+		connStr = "postgres://postgres:postgres@localhost:5432/service_tracker" // default to local postgres for dev
+	}
+
 	pool, err := pgxpool.New(ctx, connStr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -37,6 +41,14 @@ func main() {
 	// Create the server and apply the handlers
 	server := handlers.NewServer(pool)
 	router := chi.NewRouter()
+	router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:5173", "http://localhost:3000"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 	router.Use(middleware.RequestLogger)
 
 	api.HandlerFromMux(server, router)

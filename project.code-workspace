@@ -29,5 +29,6 @@
 				"source.fixAll.biome": "always"
 			}
 		},
+		"makefile.configureOnOpen": false,
 	}
 }

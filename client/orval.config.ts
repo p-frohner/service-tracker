@@ -4,7 +4,7 @@ export default defineConfig({
 	"service-tracker-api": {
 		input: "../openapi.yaml",
 		output: {
-			baseUrl: "/api", // we proxy all requests to /api in development
+			baseUrl: "http://localhost:8080",
 			target: "./src/api.ts",
 			client: "react-query",
 			httpClient: "fetch",
