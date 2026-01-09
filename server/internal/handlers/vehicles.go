@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"net/http"
+	"service-tracker/internal/api"
 	"service-tracker/internal/db"
-	"service-tracker/pkg/api"
 )
 
 func (s *Server) GetVehicles(w http.ResponseWriter, r *http.Request) {

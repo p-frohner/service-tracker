@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"service-tracker/internal/api"
 	"service-tracker/internal/handlers"
 	"service-tracker/internal/middleware"
-	"service-tracker/pkg/api"
 	"time"
 
 	"github.com/go-chi/chi/v5"

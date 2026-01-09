@@ -11,7 +11,7 @@ install: ## Install dependencies for both server and client
 
 generate: ## Run codegen for the server (sqlc and oapi-codegen)
 	cd server && sqlc generate
-	cd server && oapi-codegen -config config.yaml api.yaml > internal/api/api.gen.go
+	cd server && oapi-codegen --config server.cfg.yaml ../openapi.yaml
 
 run-server: ## Run the Go backend with hot reload (Air)
 	cd server && air --build.cmd "go build -o tmp/main ./cmd/api/main.go" --build.bin "./tmp/main"
