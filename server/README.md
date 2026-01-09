@@ -4,11 +4,12 @@ This is the Go backend for the service tracker. It uses a contract-first and sch
 
 ## Tech Stack
  - Language: Go 1.21+
- - API Spec: OpenAPI 3.0
- - Database: PostgreSQL (via Postgres.app)
+ - API Spec: OpenAPI 3.0 (located at [../openapi.yaml](../openapi.yaml))
+ - Database: PostgreSQL (via Postgres.app or Docker)
  - Codegen: sqlc (SQL to Go) and oapi-codegen (OpenAPI to Go)
+ - Hot Reload: Air
 
-## Local development
+## Local Development
 
 ### Prerequisites
 To run this project locally, you need to install:
@@ -18,7 +19,7 @@ To run this project locally, you need to install:
  - sqlc: For generating type-safe Go from SQL.
 
 ```go
-go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+go install [github.com/air-verse/air@latest](https://github.com/air-verse/air@latest)
 ```
 
 ### Database Setup (sqlc)
@@ -37,8 +38,8 @@ When you modify the OpenAPI specification (api.yaml), regenerate the server boil
 oapi-codegen --config server.cfg.yaml ../openapi.yaml
 ```
 
-### Run the Application
+### Run the Application with hot reload
 
 ```
-go run cmd/api/main.go 
+air
 ```

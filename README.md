@@ -9,7 +9,7 @@ The easiest way to get started. This handles the Database and the Go server toge
 make docker-up
 ```
 
-## Local development
+## Local Development
 The project is structured as a monorepo. To learn more about the specific setup, API contracts, or frontend configuration for each part, please refer to their respective documentation:
 
 [Server README.MD](server/README.md)

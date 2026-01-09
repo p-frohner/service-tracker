@@ -1,10 +1,6 @@
 {
 	"folders": [
 		{
-			"name": "Root",
-			"path": "."
-		},
-		{
 			"name": "Client (React)",
 			"path": "client"
 		},
@@ -12,6 +8,10 @@
 			"name": "Server (Go)",
 			"path": "server"
 		},
+		{
+			"name": "Root",
+			"path": "."
+		}
 	],
 	"settings": {
 		"editor.formatOnSave": true,

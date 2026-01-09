@@ -15,7 +15,6 @@ func RequestLogger(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var bodyLog string
 
-		// Check if there is a body to read (POST/PUT/PATCH)
 		if r.Body != nil && r.Method != http.MethodGet {
 			// Read the body into memory
 			bodyBytes, err := io.ReadAll(r.Body)

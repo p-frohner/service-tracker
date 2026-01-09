@@ -8,8 +8,9 @@
 /server/pkg/*
 !/server/pkg/api/
 !/server/pkg/api/server.gen.go
+/server/tmp/*
 
-# Logs and IDE configs
+# Client 
 ############################
 
 /client/logs
@@ -23,6 +24,9 @@
 /client/dist
 /client/dist-ssr
 /client/*.local
+
+# IDE configs
+############################
 
 .vscode/*
 !.vscode/settings.json

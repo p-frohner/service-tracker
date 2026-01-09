@@ -6,16 +6,17 @@ help: ## Display this help screen
 
 install: ## Install dependencies for both server and client
 	cd server && go mod download
+	go install github.com/air-verse/air@latest
 	cd client && npm install
 
 generate: ## Run codegen for the server (sqlc and oapi-codegen)
 	cd server && sqlc generate
 	cd server && oapi-codegen -config config.yaml api.yaml > internal/api/api.gen.go
 
-run-server: ## Run the Go backend locally
-	cd server && go run ./cmd/api/main.go
+run-server: ## Run the Go backend with hot reload (Air)
+	cd server && air --build.cmd "go build -o tmp/main ./cmd/api/main.go" --build.bin "./tmp/main"
 
-run-client: ## Run the React frontend locally
+run-client: ## Run the React frontend clientlocally
 	cd client && npm run dev
 
 docker-up: ## Start everything via Docker Compose (including DB)
