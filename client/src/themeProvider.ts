@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material";
 export const theme = createTheme({
 	palette: {
 		primary: {
-			main: "#2E5BFF",
+			main: "#5287d1",
 			contrastText: "#fff",
 		},
 		secondary: {
@@ -17,6 +17,11 @@ export const theme = createTheme({
 					backdropFilter: "blur(8px)",
 					backgroundColor: "rgba(0, 0, 0, 0.4)",
 				},
+			},
+		},
+		MuiBreadcrumbs: {
+			defaultProps: {
+				separator: "🚘",
 			},
 		},
 		MuiButtonBase: {
@@ -48,6 +53,18 @@ export const theme = createTheme({
 				root: {
 					fontWeight: 600,
 					fontSize: "1.5rem",
+				},
+			},
+		},
+		MuiLink: {
+			defaultProps: {
+				underline: "hover",
+				color: "primary",
+			},
+			styleOverrides: {
+				root: {
+					fontWeight: 600,
+					fontSize: "1.2rem",
 				},
 			},
 		},

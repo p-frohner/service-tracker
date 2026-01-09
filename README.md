@@ -1,4 +1,4 @@
-# 🏎️ Service tracker
+# 🏎️ Service Tracker
 
 Exploring Golang by building Service Tracker—a simple Go + React app to manage vehicle maintenance history and costs. Yes, I realized a few days in how misleading the name sounds for a dev project! 🤷‍♂️
 

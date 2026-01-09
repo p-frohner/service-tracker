@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 
-import { useGetVehicles, type Vehicle } from "../api";
+import { useGetVehicles } from "../api";
 import { VehicleCard } from "./VehicleCard";
 
-export const VehicleList = ({ onSelect }: { onSelect: (vehicle: Vehicle) => void }) => {
+export const VehicleList = () => {
 	const { data: vehicles, isLoading, error } = useGetVehicles();
 
 	if (isLoading) {
@@ -42,7 +42,7 @@ export const VehicleList = ({ onSelect }: { onSelect: (vehicle: Vehicle) => void
 					key={vehicle.id}
 					vehicle={vehicle}
 					onSelect={(vehicle) => {
-						onSelect(vehicle);
+						console.log(vehicle);
 					}}
 				/>
 			))}

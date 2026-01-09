@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"service-tracker/internal/db"
 	"service-tracker/pkg/api"
@@ -51,7 +50,6 @@ func (s *Server) PostVehicles(w http.ResponseWriter, r *http.Request) {
 	createdVehicle, err := s.Queries.CreateVehicle(r.Context(), params)
 
 	if err != nil {
-		log.Printf("POST VEHICLE DB ERROR: %v", err)
 		s.errorResponse(w, http.StatusInternalServerError, "Database error")
 		return
 	}

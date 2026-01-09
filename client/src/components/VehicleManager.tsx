@@ -1,39 +1,28 @@
 import { Add } from "@mui/icons-material";
 import { Box, Button, Stack } from "@mui/material";
-import { useState } from "react";
-import { AddVehicleDialog } from "./AddVehicleDialog";
+import { useNavigate } from "@tanstack/react-router";
+import { Link } from "./Link";
 import { VehicleList } from "./VehicleList";
 
 export const VehicleManager = () => {
-	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+	const navigate = useNavigate();
 
 	return (
-		<Stack spacing={2} direction="column" padding={2}>
+		<Box padding={2}>
 			<Box textAlign="right" pb={2}>
-				<Button
-					variant="outlined"
-					size="large"
-					onClick={() => {
-						setIsAddDialogOpen(true);
-					}}
-					endIcon={<Add />}
+				<Link
+					// variant="outlined"
+					// size="large"
+					// onClick={() => {
+					// 	navigate({ to: "/add-vehicle" });
+					// }}
+					// endIcon={<Add />}
+					to="/add-vehicle"
 				>
 					Add Vehicle
-				</Button>
+				</Link>
 			</Box>
-			<VehicleList
-				onSelect={(id) => {
-					return id;
-				}}
-			/>
-			{isAddDialogOpen && (
-				<AddVehicleDialog
-					open={isAddDialogOpen}
-					onClose={() => {
-						setIsAddDialogOpen(false);
-					}}
-				/>
-			)}
-		</Stack>
+			<VehicleList />
+		</Box>
 	);
 };
