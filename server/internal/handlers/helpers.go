@@ -10,12 +10,12 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-func fromUUID(u pgtype.UUID) string {
+func uuidToString(u pgtype.UUID) string {
 	buf, _ := u.MarshalJSON()
 	return strings.Trim(string(buf), `"`)
 }
 
-func toUUID(s string) (pgtype.UUID, error) {
+func stringToUUID(s string) (pgtype.UUID, error) {
 	var u pgtype.UUID
 	err := u.UnmarshalJSON([]byte(`"` + s + `"`))
 	return u, err

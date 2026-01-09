@@ -17,7 +17,7 @@ func (s *Server) GetVehicles(w http.ResponseWriter, r *http.Request) {
 	vehicles := make([]api.Vehicle, 0, len(dbVehicles))
 
 	for _, v := range dbVehicles {
-		idStr := fromUUID(v.ID) // Convert pgtype.UUID to string for the frontend
+		idStr := uuidToString(v.ID) // Convert pgtype.UUID to string for the frontend
 
 		vehicles = append(vehicles, api.Vehicle{
 			Id:    &idStr,
@@ -53,7 +53,7 @@ func (s *Server) PostVehicles(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
-	id, err := toUUID(vehicleId)
+	id, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
 		return
@@ -69,7 +69,7 @@ func (s *Server) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request,
 }
 
 func (s *Server) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
-	id, err := toUUID(vehicleId)
+	id, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid ID")
 		return
@@ -81,7 +81,7 @@ func (s *Server) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, ve
 		return
 	}
 
-	idStr := fromUUID(v.ID)
+	idStr := uuidToString(v.ID)
 	response := api.Vehicle{
 		Id:    &idStr,
 		Make:  v.Make,
@@ -93,7 +93,7 @@ func (s *Server) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, ve
 }
 
 func (s *Server) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
-	id, err := toUUID(vehicleId)
+	id, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
 		return
