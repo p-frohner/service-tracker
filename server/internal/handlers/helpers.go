@@ -5,29 +5,38 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func fromUUID(u pgtype.UUID) string {
-	return fmt.Sprintf("%x-%x-%x-%x-%x", u.Bytes[0:4], u.Bytes[4:6], u.Bytes[6:8], u.Bytes[8:10], u.Bytes[10:12])
+	buf, _ := u.MarshalJSON()
+	return strings.Trim(string(buf), `"`)
 }
 
-func toUUID(s string) pgtype.UUID {
+func toUUID(s string) (pgtype.UUID, error) {
 	var u pgtype.UUID
-	u.UnmarshalJSON([]byte(`"` + s + `"`))
-	return u
+	err := u.UnmarshalJSON([]byte(`"` + s + `"`))
+	return u, err
+}
+
+// writeJSON handles the standard success response
+func (s *Server) writeJSON(w http.ResponseWriter, status int, data any) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+	}
 }
 
 // respond in a standardized error format
-func (s *Server) errorResponse(w http.ResponseWriter, status int, message string) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(map[string]string{"message": message})
+func (s *Server) writeError(w http.ResponseWriter, status int, message string) {
+	s.writeJSON(w, status, map[string]string{"message": message})
 }
 
 // decodes and validates the JSON request body and rerturns an error response if invalid
-func (s *Server) validateRequest(w http.ResponseWriter, r *http.Request, v any) error {
+func (s *Server) parseJSON(w http.ResponseWriter, r *http.Request, v any) error {
 	err := json.NewDecoder(r.Body).Decode(v)
 
 	if err != nil {
@@ -41,7 +50,7 @@ func (s *Server) validateRequest(w http.ResponseWriter, r *http.Request, v any) 
 			errorDetail = "Invalid JSON format: " + err.Error()
 		}
 
-		s.errorResponse(w, http.StatusBadRequest, errorDetail)
+		s.writeError(w, http.StatusBadRequest, errorDetail)
 
 		return err
 	}
