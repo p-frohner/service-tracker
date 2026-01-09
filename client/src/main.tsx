@@ -7,7 +7,7 @@ import { NotificationSnackbar } from "./components/NotificationSnackbar";
 import { routeTree } from "./routeTree.gen"; // This file is auto-generated
 import { showGlobalNotification } from "./utils/notificationHandler";
 
-const router = createRouter({ routeTree });
+const router = createRouter({ routeTree, defaultViewTransition: true });
 
 const queryClient = new QueryClient({
 	defaultOptions: {

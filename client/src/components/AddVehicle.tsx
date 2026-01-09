@@ -76,7 +76,7 @@ export const AddVehicle = () => {
 					/>
 				</Stack>
 				<Box sx={{ py: 3 }}>
-					<Button type="submit" variant="contained" disabled={isPending} fullWidth>
+					<Button type="submit" variant="contained" disabled={isPending} fullWidth size="large">
 						{isPending ? "Saving..." : "Add Vehicle"}
 					</Button>
 				</Box>
