@@ -1,4 +1,5 @@
-import { Divider, Breadcrumbs as MuiBreadcrumbs, Typography } from "@mui/material";
+import { Breadcrumbs as MuiBreadcrumbs, Typography } from "@mui/material";
+
 import { Link } from "./Link";
 
 type Props = {
@@ -17,11 +18,7 @@ export const Breadcrumbs = ({ items }: Props) => {
 						{item.label}
 					</Link>
 				) : (
-					<Typography
-						// component="a"
-						key={item.label}
-						sx={{ color: "text.primary", fontWeight: "bold" }}
-					>
+					<Typography key={item.label} sx={{ color: "text.primary", fontWeight: "bold" }}>
 						{item.label}
 					</Typography>
 				),

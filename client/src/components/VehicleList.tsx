@@ -1,9 +1,10 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-
+import { useNavigate } from "@tanstack/react-router";
 import { useGetVehicles } from "../api";
 import { VehicleCard } from "./VehicleCard";
 
 export const VehicleList = () => {
+	const navigate = useNavigate();
 	const { data: vehicles, isLoading, error } = useGetVehicles();
 
 	if (isLoading) {
@@ -15,6 +16,7 @@ export const VehicleList = () => {
 		);
 	}
 
+	// TODO: make it generic and use snackbar notification
 	if (error) {
 		return <Typography color="error">Error loading vehicles. Is the Go server running?</Typography>;
 	}
@@ -42,7 +44,7 @@ export const VehicleList = () => {
 					key={vehicle.id}
 					vehicle={vehicle}
 					onSelect={(vehicle) => {
-						console.log(vehicle);
+						navigate({ to: `/vehicle-details/${vehicle.id}` });
 					}}
 				/>
 			))}

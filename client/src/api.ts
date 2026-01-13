@@ -25,6 +25,7 @@ import type {
 } from '@tanstack/react-query';
 
 import { customFetch } from './custom-fetch';
+import type { ErrorType } from './custom-fetch';
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
@@ -112,7 +113,7 @@ export const getGetVehiclesQueryKey = () => {
     }
 
     
-export const getGetVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export const getGetVehiclesQueryOptions = <TData = Awaited<ReturnType<typeof getVehicles>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -131,10 +132,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetVehiclesQueryResult = NonNullable<Awaited<ReturnType<typeof getVehicles>>>
-export type GetVehiclesQueryError = unknown
+export type GetVehiclesQueryError = ErrorType<unknown>
 
 
-export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = ErrorType<unknown>>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getVehicles>>,
@@ -144,7 +145,7 @@ export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, 
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getVehicles>>,
@@ -154,7 +155,7 @@ export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, 
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
@@ -162,7 +163,7 @@ export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, 
  * @summary Retrieve a list of vehicles
  */
 
-export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = unknown>(
+export function useGetVehicles<TData = Awaited<ReturnType<typeof getVehicles>>, TError = ErrorType<unknown>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicles>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -206,7 +207,7 @@ export const postVehicles = async (vehicle: NonReadonly<Vehicle>, options?: Requ
 
 
 
-export const getPostVehiclesMutationOptions = <TError = unknown,
+export const getPostVehiclesMutationOptions = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext> => {
 
@@ -233,12 +234,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type PostVehiclesMutationResult = NonNullable<Awaited<ReturnType<typeof postVehicles>>>
     export type PostVehiclesMutationBody = NonReadonly<Vehicle>
-    export type PostVehiclesMutationError = unknown
+    export type PostVehiclesMutationError = ErrorType<unknown>
 
     /**
  * @summary Add a new vehicle
  */
-export const usePostVehicles = <TError = unknown,
+export const usePostVehicles = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postVehicles>>, TError,{data: NonReadonly<Vehicle>}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postVehicles>>,
@@ -285,7 +286,7 @@ export const getGetVehiclesVehicleIdQueryKey = (vehicleId?: string,) => {
     }
 
     
-export const getGetVehiclesVehicleIdQueryOptions = <TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = void>(vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+export const getGetVehiclesVehicleIdQueryOptions = <TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = ErrorType<void>>(vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -304,10 +305,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetVehiclesVehicleIdQueryResult = NonNullable<Awaited<ReturnType<typeof getVehiclesVehicleId>>>
-export type GetVehiclesVehicleIdQueryError = void
+export type GetVehiclesVehicleIdQueryError = ErrorType<void>
 
 
-export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = void>(
+export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = ErrorType<void>>(
  vehicleId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getVehiclesVehicleId>>,
@@ -317,7 +318,7 @@ export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVeh
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = void>(
+export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = ErrorType<void>>(
  vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getVehiclesVehicleId>>,
@@ -327,7 +328,7 @@ export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVeh
       >, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = void>(
+export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = ErrorType<void>>(
  vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
@@ -335,7 +336,7 @@ export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVeh
  * @summary Retrieve a vehicle by ID
  */
 
-export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = void>(
+export function useGetVehiclesVehicleId<TData = Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError = ErrorType<void>>(
  vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehiclesVehicleId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -380,7 +381,7 @@ export const putVehiclesVehicleId = async (vehicleId: string,
 
 
 
-export const getPutVehiclesVehicleIdMutationOptions = <TError = unknown,
+export const getPutVehiclesVehicleIdMutationOptions = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putVehiclesVehicleId>>, TError,{vehicleId: string;data: NonReadonly<Vehicle>}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof putVehiclesVehicleId>>, TError,{vehicleId: string;data: NonReadonly<Vehicle>}, TContext> => {
 
@@ -407,12 +408,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type PutVehiclesVehicleIdMutationResult = NonNullable<Awaited<ReturnType<typeof putVehiclesVehicleId>>>
     export type PutVehiclesVehicleIdMutationBody = NonReadonly<Vehicle>
-    export type PutVehiclesVehicleIdMutationError = unknown
+    export type PutVehiclesVehicleIdMutationError = ErrorType<unknown>
 
     /**
  * @summary Update an existing vehicle
  */
-export const usePutVehiclesVehicleId = <TError = unknown,
+export const usePutVehiclesVehicleId = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putVehiclesVehicleId>>, TError,{vehicleId: string;data: NonReadonly<Vehicle>}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof putVehiclesVehicleId>>,
@@ -451,7 +452,7 @@ export const deleteVehiclesVehicleId = async (vehicleId: string, options?: Reque
 
 
 
-export const getDeleteVehiclesVehicleIdMutationOptions = <TError = unknown,
+export const getDeleteVehiclesVehicleIdMutationOptions = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteVehiclesVehicleId>>, TError,{vehicleId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteVehiclesVehicleId>>, TError,{vehicleId: string}, TContext> => {
 
@@ -478,12 +479,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type DeleteVehiclesVehicleIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteVehiclesVehicleId>>>
     
-    export type DeleteVehiclesVehicleIdMutationError = unknown
+    export type DeleteVehiclesVehicleIdMutationError = ErrorType<unknown>
 
     /**
  * @summary Delete a vehicle
  */
-export const useDeleteVehiclesVehicleId = <TError = unknown,
+export const useDeleteVehiclesVehicleId = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteVehiclesVehicleId>>, TError,{vehicleId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof deleteVehiclesVehicleId>>,
