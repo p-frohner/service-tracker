@@ -10,18 +10,20 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+// uuidToString converts a pgtype.UUID to its string representation
 func uuidToString(u pgtype.UUID) string {
 	buf, _ := u.MarshalJSON()
 	return strings.Trim(string(buf), `"`)
 }
 
+// stringToUUID converts a string to a pgtype.UUID
 func stringToUUID(s string) (pgtype.UUID, error) {
 	var u pgtype.UUID
 	err := u.UnmarshalJSON([]byte(`"` + s + `"`))
 	return u, err
 }
 
-// writeJSON handles the standard success response
+// writeJSON responds with a JSON response
 func (s *Server) writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
@@ -30,12 +32,12 @@ func (s *Server) writeJSON(w http.ResponseWriter, status int, data any) {
 	}
 }
 
-// respond in a standardized error format
+// writeError responds in a standardized error format
 func (s *Server) writeError(w http.ResponseWriter, status int, message string) {
 	s.writeJSON(w, status, map[string]string{"message": message})
 }
 
-// decodes and validates the JSON request body and rerturns an error response if invalid
+// parseJSON decodes and validates the JSON request body and returns an error if invalid
 func (s *Server) parseJSON(w http.ResponseWriter, r *http.Request, v any) error {
 	err := json.NewDecoder(r.Body).Decode(v)
 

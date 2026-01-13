@@ -13,11 +13,10 @@ func (s *Server) GetVehicles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Convert the map of Vehicle structs to a slice of Vehicle structs.
 	vehicles := make([]api.Vehicle, 0, len(dbVehicles))
 
 	for _, v := range dbVehicles {
-		idStr := uuidToString(v.ID) // Convert pgtype.UUID to string for the frontend
+		idStr := uuidToString(v.ID)
 
 		vehicles = append(vehicles, api.Vehicle{
 			Id:    &idStr,

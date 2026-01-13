@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"service-tracker/internal/api"
 	"service-tracker/internal/db"
-	"service-tracker/internal/middleware"
+
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -35,7 +36,7 @@ func (s *Server) Routes() http.Handler {
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
-	r.Use(middleware.RequestLogger)
+	r.Use(middleware.Logger)
 
 	// Register OpenAPI generated routes
 	api.HandlerFromMux(s, r)
