@@ -8,6 +8,17 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type MaintenanceRecord struct {
+	ID          pgtype.UUID        `json:"id"`
+	VehicleID   pgtype.UUID        `json:"vehicle_id"`
+	Date        pgtype.Date        `json:"date"`
+	Description string             `json:"description"`
+	Mileage     int32              `json:"mileage"`
+	Cost        *string            `json:"cost"`
+	Notes       *string            `json:"notes"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+}
+
 type Vehicle struct {
 	ID        pgtype.UUID        `json:"id"`
 	Make      string             `json:"make"`

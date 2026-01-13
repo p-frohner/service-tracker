@@ -11,6 +11,44 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createMaintenanceRecord = `-- name: CreateMaintenanceRecord :one
+INSERT INTO maintenance_records (vehicle_id, date, description, mileage, cost, notes)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, vehicle_id, date, description, mileage, cost, notes, created_at
+`
+
+type CreateMaintenanceRecordParams struct {
+	VehicleID   pgtype.UUID `json:"vehicle_id"`
+	Date        pgtype.Date `json:"date"`
+	Description string      `json:"description"`
+	Mileage     int32       `json:"mileage"`
+	Cost        *string     `json:"cost"`
+	Notes       *string     `json:"notes"`
+}
+
+func (q *Queries) CreateMaintenanceRecord(ctx context.Context, arg CreateMaintenanceRecordParams) (MaintenanceRecord, error) {
+	row := q.db.QueryRow(ctx, createMaintenanceRecord,
+		arg.VehicleID,
+		arg.Date,
+		arg.Description,
+		arg.Mileage,
+		arg.Cost,
+		arg.Notes,
+	)
+	var i MaintenanceRecord
+	err := row.Scan(
+		&i.ID,
+		&i.VehicleID,
+		&i.Date,
+		&i.Description,
+		&i.Mileage,
+		&i.Cost,
+		&i.Notes,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const createVehicle = `-- name: CreateVehicle :one
 INSERT INTO vehicles (make, model, year)
 VALUES ($1, $2, $3)

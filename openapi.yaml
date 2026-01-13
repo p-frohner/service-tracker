@@ -64,80 +64,80 @@ paths:
       responses:
         '204':
           description: Vehicle deleted successfully
-  # /vehicles/{vehicleId}/maintenance:
-  #   get:
-  #     summary: Retrieve maintenance records for a vehicle
-  #     parameters:
-  #       - in: path
-  #         name: vehicleId
-  #         required: true
-  #         schema:
-  #           type: string
-  #     responses:
-  #       '200':
-  #         description: A list of maintenance records
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: array
-  #               items:
-  #                 $ref: '#/components/schemas/MaintenanceRecord'
-  #   post:
-  #     summary: Add a maintenance record for a vehicle
-  #     parameters:
-  #       - in: path
-  #         name: vehicleId
-  #         required: true
-  #         schema:
-  #           type: string
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/MaintenanceRecord'
-  #     responses:
-  #       '201':
-  #         description: Maintenance record created successfully
-  # /vehicles/{vehicleId}/maintenance/{recordId}:
-  #     parameters:
-  #       - in: path
-  #         name: vehicleId
-  #         required: true
-  #         schema:
-  #           type: string
-  #       - in: path
-  #         name: recordId
-  #         required: true
-  #         schema:
-  #           type: string
-  #     get:
-  #       summary: Retrieve a specific maintenance record
-  #       responses:
-  #         '200':
-  #           description: A maintenance record object
-  #           content:
-  #             application/json:
-  #               schema:
-  #                 $ref: '#/components/schemas/MaintenanceRecord'
-  #         '404':
-  #           description: Record not found
-  #     put: 
-  #       summary: Update an existing maintenance record
-  #       requestBody:
-  #         required: true
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/MaintenanceRecord'
-  #       responses:
-  #         '200':
-  #           description: Record updated successfully
-  #     delete:
-  #       summary: Delete a maintenance record
-  #       responses:
-  #         '204':
-  #           description: Record deleted successfully
+  /vehicles/{vehicleId}/maintenance:
+    get:
+      summary: Retrieve maintenance records for a vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of maintenance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaintenanceRecord'
+    post:
+      summary: Add a maintenance record for a vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaintenanceRecord'
+      responses:
+        '201':
+          description: Maintenance record created successfully
+  /vehicles/{vehicleId}/maintenance/{recordId}:
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: recordId
+          required: true
+          schema:
+            type: string
+      get:
+        summary: Retrieve a specific maintenance record
+        responses:
+          '200':
+            description: A maintenance record object
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/MaintenanceRecord'
+          '404':
+            description: Record not found
+      put: 
+        summary: Update an existing maintenance record
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaintenanceRecord'
+        responses:
+          '200':
+            description: Record updated successfully
+      delete:
+        summary: Delete a maintenance record
+        responses:
+          '204':
+            description: Record deleted successfully
 components:
   schemas:
     MaintenanceRecord:

@@ -20,3 +20,8 @@ RETURNING *;
 -- name: DeleteVehicle :exec
 DELETE FROM vehicles
 WHERE id = $1;
+
+-- name: CreateMaintenanceRecord :one
+INSERT INTO maintenance_records (vehicle_id, date, description, mileage, cost, notes)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING *;
