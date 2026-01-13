@@ -19,7 +19,7 @@ export const NotificationSnackbar = () => {
 			open={open}
 			autoHideDuration={5000}
 			onClose={() => setOpen(false)}
-			anchorOrigin={{ vertical: "top", horizontal: "center" }}
+			anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
 		>
 			<Alert
 				severity={config.severity}

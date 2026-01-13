@@ -6,7 +6,13 @@ export type BackendError = {
 export type ErrorType<_T> = BackendError;
 
 export const customFetch = async <T>(url: string, options: RequestInit): Promise<T> => {
-	const response = await fetch(url, options);
+	let response: Response;
+	try {
+		response = await fetch(url, options);
+	} catch {
+		// Network error (server down, no internet, CORS, etc.)
+		throw { message: "Unable to connect to server" } as BackendError;
+	}
 
 	if (!response.ok) {
 		// Prevents onSuccess from firing in react-query so we can display error messages

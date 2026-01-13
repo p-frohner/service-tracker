@@ -5,7 +5,7 @@ import { VehicleCard } from "./VehicleCard";
 
 export const VehicleList = () => {
 	const navigate = useNavigate();
-	const { data: vehicles, isLoading, error } = useListVehicles();
+	const { data: vehicles, isLoading } = useListVehicles();
 
 	if (isLoading) {
 		return (
@@ -14,11 +14,6 @@ export const VehicleList = () => {
 				<Typography sx={{ ml: 2 }}>Loading...</Typography>
 			</Box>
 		);
-	}
-
-	// TODO: make it generic and use snackbar notification
-	if (error) {
-		return <Typography color="error">Error loading vehicles. Is the Go server running?</Typography>;
 	}
 
 	if (!vehicles || vehicles?.length === 0) {
