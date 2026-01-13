@@ -9,6 +9,7 @@ servers:
 paths:
   /vehicles:
     get:
+      operationId: listVehicles
       summary: Retrieve a list of vehicles
       responses:
         '200':
@@ -20,6 +21,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Vehicle'
     post:
+      operationId: createVehicle
       summary: Add a new vehicle
       requestBody:
         required: true
@@ -38,6 +40,7 @@ paths:
         schema:
           type: string
     get:
+      operationId: getVehicle
       summary: Retrieve a vehicle by ID
       responses:
         '200':
@@ -49,6 +52,7 @@ paths:
         '404':
           description: Vehicle not found
     put:
+      operationId: updateVehicle
       summary: Update an existing vehicle
       requestBody:
         required: true
@@ -60,12 +64,14 @@ paths:
         '200':
           description: Vehicle updated successfully
     delete:
+      operationId: deleteVehicle
       summary: Delete a vehicle
       responses:
         '204':
           description: Vehicle deleted successfully
   /vehicles/{vehicleId}/maintenance:
     get:
+      operationId: listMaintenanceRecords
       summary: Retrieve maintenance records for a vehicle
       parameters:
         - in: path
@@ -83,6 +89,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/MaintenanceRecord'
     post:
+      operationId: createMaintenanceRecord
       summary: Add a maintenance record for a vehicle
       parameters:
         - in: path
@@ -112,6 +119,7 @@ paths:
           schema:
             type: string
       get:
+        operationId: getMaintenanceRecord
         summary: Retrieve a specific maintenance record
         responses:
           '200':
@@ -122,7 +130,8 @@ paths:
                   $ref: '#/components/schemas/MaintenanceRecord'
           '404':
             description: Record not found
-      put: 
+      put:
+        operationId: updateMaintenanceRecord
         summary: Update an existing maintenance record
         requestBody:
           required: true
@@ -134,6 +143,7 @@ paths:
           '200':
             description: Record updated successfully
       delete:
+        operationId: deleteMaintenanceRecord
         summary: Delete a maintenance record
         responses:
           '204':

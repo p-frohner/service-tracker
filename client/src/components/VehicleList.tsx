@@ -1,11 +1,11 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useNavigate } from "@tanstack/react-router";
-import { useGetVehicles } from "../api";
+import { useListVehicles } from "../api";
 import { VehicleCard } from "./VehicleCard";
 
 export const VehicleList = () => {
 	const navigate = useNavigate();
-	const { data: vehicles, isLoading, error } = useGetVehicles();
+	const { data: vehicles, isLoading, error } = useListVehicles();
 
 	if (isLoading) {
 		return (

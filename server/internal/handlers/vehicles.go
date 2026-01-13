@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-func (s *Server) GetVehicles(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ListVehicles(w http.ResponseWriter, r *http.Request) {
 	dbVehicles, err := s.Queries.ListVehicles(r.Context())
 	if err != nil {
 		s.writeError(w, http.StatusInternalServerError, "Could not fetch vehicles from database")
@@ -31,7 +31,7 @@ func (s *Server) GetVehicles(w http.ResponseWriter, r *http.Request) {
 	s.writeJSON(w, http.StatusCreated, vehicles)
 }
 
-func (s *Server) PostVehicles(w http.ResponseWriter, r *http.Request) {
+func (s *Server) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 	var newVehicle api.Vehicle
 
 	if err := s.parseJSON(w, r, &newVehicle); err != nil {
@@ -53,7 +53,7 @@ func (s *Server) PostVehicles(w http.ResponseWriter, r *http.Request) {
 	s.writeJSON(w, http.StatusCreated, createdVehicle)
 }
 
-func (s *Server) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (s *Server) DeleteVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	id, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
@@ -69,7 +69,7 @@ func (s *Server) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request,
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (s *Server) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (s *Server) GetVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	id, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid ID")
@@ -93,7 +93,7 @@ func (s *Server) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, ve
 	s.writeJSON(w, http.StatusOK, response)
 }
 
-func (s *Server) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (s *Server) UpdateVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	id, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
@@ -121,19 +121,19 @@ func (s *Server) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, ve
 	s.writeJSON(w, http.StatusOK, updatedVehicle)
 }
 
-func (s *Server) GetVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (s *Server) ListMaintenanceRecords(w http.ResponseWriter, r *http.Request, vehicleId string) {
 }
 
-func (s *Server) GetVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
+func (s *Server) GetMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
 }
 
-func (s *Server) DeleteVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
+func (s *Server) DeleteMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
 }
 
-func (s *Server) PutVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
+func (s *Server) UpdateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
 }
 
-func (s *Server) PostVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (s *Server) CreateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	vehUUID, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")

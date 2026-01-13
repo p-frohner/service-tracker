@@ -1,7 +1,7 @@
 import { Box, Container, Stack } from "@mui/material";
 import { useNavigate } from "@tanstack/react-router";
 
-import { useGetVehiclesVehicleId } from "../api";
+import { useGetVehicle } from "../api";
 import { Route } from "../routes/vehicle-details.$vehicleId";
 
 import { Breadcrumbs } from "./Breadcrumbs";
@@ -9,7 +9,7 @@ import { Breadcrumbs } from "./Breadcrumbs";
 export const VehicleDetails = () => {
 	const navigate = useNavigate();
 	const { vehicleId } = Route.useParams();
-	const { data: vehicle, error } = useGetVehiclesVehicleId(vehicleId);
+	const { data: vehicle, error } = useGetVehicle(vehicleId);
 	const vehicleName = vehicle ? `${vehicle.make} ${vehicle.model} - ${vehicle.year}` : "";
 
 	if (error?.message === "Invalid ID") {

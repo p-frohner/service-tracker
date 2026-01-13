@@ -45,50 +45,50 @@ type Vehicle struct {
 	Year  int     `json:"year"`
 }
 
-// PostVehiclesJSONRequestBody defines body for PostVehicles for application/json ContentType.
-type PostVehiclesJSONRequestBody = Vehicle
+// CreateVehicleJSONRequestBody defines body for CreateVehicle for application/json ContentType.
+type CreateVehicleJSONRequestBody = Vehicle
 
-// PutVehiclesVehicleIdJSONRequestBody defines body for PutVehiclesVehicleId for application/json ContentType.
-type PutVehiclesVehicleIdJSONRequestBody = Vehicle
+// UpdateVehicleJSONRequestBody defines body for UpdateVehicle for application/json ContentType.
+type UpdateVehicleJSONRequestBody = Vehicle
 
-// PostVehiclesVehicleIdMaintenanceJSONRequestBody defines body for PostVehiclesVehicleIdMaintenance for application/json ContentType.
-type PostVehiclesVehicleIdMaintenanceJSONRequestBody = MaintenanceRecord
+// CreateMaintenanceRecordJSONRequestBody defines body for CreateMaintenanceRecord for application/json ContentType.
+type CreateMaintenanceRecordJSONRequestBody = MaintenanceRecord
 
-// PutVehiclesVehicleIdMaintenanceRecordIdJSONRequestBody defines body for PutVehiclesVehicleIdMaintenanceRecordId for application/json ContentType.
-type PutVehiclesVehicleIdMaintenanceRecordIdJSONRequestBody = MaintenanceRecord
+// UpdateMaintenanceRecordJSONRequestBody defines body for UpdateMaintenanceRecord for application/json ContentType.
+type UpdateMaintenanceRecordJSONRequestBody = MaintenanceRecord
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Retrieve a list of vehicles
 	// (GET /vehicles)
-	GetVehicles(w http.ResponseWriter, r *http.Request)
+	ListVehicles(w http.ResponseWriter, r *http.Request)
 	// Add a new vehicle
 	// (POST /vehicles)
-	PostVehicles(w http.ResponseWriter, r *http.Request)
+	CreateVehicle(w http.ResponseWriter, r *http.Request)
 	// Delete a vehicle
 	// (DELETE /vehicles/{vehicleId})
-	DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string)
+	DeleteVehicle(w http.ResponseWriter, r *http.Request, vehicleId string)
 	// Retrieve a vehicle by ID
 	// (GET /vehicles/{vehicleId})
-	GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string)
+	GetVehicle(w http.ResponseWriter, r *http.Request, vehicleId string)
 	// Update an existing vehicle
 	// (PUT /vehicles/{vehicleId})
-	PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string)
+	UpdateVehicle(w http.ResponseWriter, r *http.Request, vehicleId string)
 	// Retrieve maintenance records for a vehicle
 	// (GET /vehicles/{vehicleId}/maintenance)
-	GetVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request, vehicleId string)
+	ListMaintenanceRecords(w http.ResponseWriter, r *http.Request, vehicleId string)
 	// Add a maintenance record for a vehicle
 	// (POST /vehicles/{vehicleId}/maintenance)
-	PostVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request, vehicleId string)
+	CreateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string)
 	// Delete a maintenance record
 	// (DELETE /vehicles/{vehicleId}/maintenance/{recordId})
-	DeleteVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string)
+	DeleteMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string)
 	// Retrieve a specific maintenance record
 	// (GET /vehicles/{vehicleId}/maintenance/{recordId})
-	GetVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string)
+	GetMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string)
 	// Update an existing maintenance record
 	// (PUT /vehicles/{vehicleId}/maintenance/{recordId})
-	PutVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string)
+	UpdateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -97,61 +97,61 @@ type Unimplemented struct{}
 
 // Retrieve a list of vehicles
 // (GET /vehicles)
-func (_ Unimplemented) GetVehicles(w http.ResponseWriter, r *http.Request) {
+func (_ Unimplemented) ListVehicles(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Add a new vehicle
 // (POST /vehicles)
-func (_ Unimplemented) PostVehicles(w http.ResponseWriter, r *http.Request) {
+func (_ Unimplemented) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Delete a vehicle
 // (DELETE /vehicles/{vehicleId})
-func (_ Unimplemented) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (_ Unimplemented) DeleteVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Retrieve a vehicle by ID
 // (GET /vehicles/{vehicleId})
-func (_ Unimplemented) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (_ Unimplemented) GetVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Update an existing vehicle
 // (PUT /vehicles/{vehicleId})
-func (_ Unimplemented) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (_ Unimplemented) UpdateVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Retrieve maintenance records for a vehicle
 // (GET /vehicles/{vehicleId}/maintenance)
-func (_ Unimplemented) GetVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (_ Unimplemented) ListMaintenanceRecords(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Add a maintenance record for a vehicle
 // (POST /vehicles/{vehicleId}/maintenance)
-func (_ Unimplemented) PostVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request, vehicleId string) {
+func (_ Unimplemented) CreateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Delete a maintenance record
 // (DELETE /vehicles/{vehicleId}/maintenance/{recordId})
-func (_ Unimplemented) DeleteVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string) {
+func (_ Unimplemented) DeleteMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Retrieve a specific maintenance record
 // (GET /vehicles/{vehicleId}/maintenance/{recordId})
-func (_ Unimplemented) GetVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string) {
+func (_ Unimplemented) GetMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Update an existing maintenance record
 // (PUT /vehicles/{vehicleId}/maintenance/{recordId})
-func (_ Unimplemented) PutVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string) {
+func (_ Unimplemented) UpdateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, recordId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -164,8 +164,8 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(http.Handler) http.Handler
 
-// GetVehicles operation middleware
-func (siw *ServerInterfaceWrapper) GetVehicles(w http.ResponseWriter, r *http.Request) {
+// ListVehicles operation middleware
+func (siw *ServerInterfaceWrapper) ListVehicles(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
@@ -174,7 +174,7 @@ func (siw *ServerInterfaceWrapper) GetVehicles(w http.ResponseWriter, r *http.Re
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetVehicles(w, r)
+		siw.Handler.ListVehicles(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -184,8 +184,8 @@ func (siw *ServerInterfaceWrapper) GetVehicles(w http.ResponseWriter, r *http.Re
 	handler.ServeHTTP(w, r)
 }
 
-// PostVehicles operation middleware
-func (siw *ServerInterfaceWrapper) PostVehicles(w http.ResponseWriter, r *http.Request) {
+// CreateVehicle operation middleware
+func (siw *ServerInterfaceWrapper) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
@@ -194,7 +194,7 @@ func (siw *ServerInterfaceWrapper) PostVehicles(w http.ResponseWriter, r *http.R
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PostVehicles(w, r)
+		siw.Handler.CreateVehicle(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -204,8 +204,8 @@ func (siw *ServerInterfaceWrapper) PostVehicles(w http.ResponseWriter, r *http.R
 	handler.ServeHTTP(w, r)
 }
 
-// DeleteVehiclesVehicleId operation middleware
-func (siw *ServerInterfaceWrapper) DeleteVehiclesVehicleId(w http.ResponseWriter, r *http.Request) {
+// DeleteVehicle operation middleware
+func (siw *ServerInterfaceWrapper) DeleteVehicle(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -225,7 +225,7 @@ func (siw *ServerInterfaceWrapper) DeleteVehiclesVehicleId(w http.ResponseWriter
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.DeleteVehiclesVehicleId(w, r, vehicleId)
+		siw.Handler.DeleteVehicle(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -235,8 +235,8 @@ func (siw *ServerInterfaceWrapper) DeleteVehiclesVehicleId(w http.ResponseWriter
 	handler.ServeHTTP(w, r)
 }
 
-// GetVehiclesVehicleId operation middleware
-func (siw *ServerInterfaceWrapper) GetVehiclesVehicleId(w http.ResponseWriter, r *http.Request) {
+// GetVehicle operation middleware
+func (siw *ServerInterfaceWrapper) GetVehicle(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -256,7 +256,7 @@ func (siw *ServerInterfaceWrapper) GetVehiclesVehicleId(w http.ResponseWriter, r
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetVehiclesVehicleId(w, r, vehicleId)
+		siw.Handler.GetVehicle(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -266,8 +266,8 @@ func (siw *ServerInterfaceWrapper) GetVehiclesVehicleId(w http.ResponseWriter, r
 	handler.ServeHTTP(w, r)
 }
 
-// PutVehiclesVehicleId operation middleware
-func (siw *ServerInterfaceWrapper) PutVehiclesVehicleId(w http.ResponseWriter, r *http.Request) {
+// UpdateVehicle operation middleware
+func (siw *ServerInterfaceWrapper) UpdateVehicle(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -287,7 +287,7 @@ func (siw *ServerInterfaceWrapper) PutVehiclesVehicleId(w http.ResponseWriter, r
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PutVehiclesVehicleId(w, r, vehicleId)
+		siw.Handler.UpdateVehicle(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -297,8 +297,8 @@ func (siw *ServerInterfaceWrapper) PutVehiclesVehicleId(w http.ResponseWriter, r
 	handler.ServeHTTP(w, r)
 }
 
-// GetVehiclesVehicleIdMaintenance operation middleware
-func (siw *ServerInterfaceWrapper) GetVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request) {
+// ListMaintenanceRecords operation middleware
+func (siw *ServerInterfaceWrapper) ListMaintenanceRecords(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -318,7 +318,7 @@ func (siw *ServerInterfaceWrapper) GetVehiclesVehicleIdMaintenance(w http.Respon
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetVehiclesVehicleIdMaintenance(w, r, vehicleId)
+		siw.Handler.ListMaintenanceRecords(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -328,8 +328,8 @@ func (siw *ServerInterfaceWrapper) GetVehiclesVehicleIdMaintenance(w http.Respon
 	handler.ServeHTTP(w, r)
 }
 
-// PostVehiclesVehicleIdMaintenance operation middleware
-func (siw *ServerInterfaceWrapper) PostVehiclesVehicleIdMaintenance(w http.ResponseWriter, r *http.Request) {
+// CreateMaintenanceRecord operation middleware
+func (siw *ServerInterfaceWrapper) CreateMaintenanceRecord(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -349,7 +349,7 @@ func (siw *ServerInterfaceWrapper) PostVehiclesVehicleIdMaintenance(w http.Respo
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PostVehiclesVehicleIdMaintenance(w, r, vehicleId)
+		siw.Handler.CreateMaintenanceRecord(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -359,48 +359,8 @@ func (siw *ServerInterfaceWrapper) PostVehiclesVehicleIdMaintenance(w http.Respo
 	handler.ServeHTTP(w, r)
 }
 
-// DeleteVehiclesVehicleIdMaintenanceRecordId operation middleware
-func (siw *ServerInterfaceWrapper) DeleteVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request) {
-
-	var err error
-
-	// ------------- Path parameter "vehicleId" -------------
-	var vehicleId string
-
-	err = runtime.BindStyledParameterWithOptions("simple", "vehicleId", chi.URLParam(r, "vehicleId"), &vehicleId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "vehicleId", Err: err})
-		return
-	}
-
-	// ------------- Path parameter "recordId" -------------
-	var recordId string
-
-	err = runtime.BindStyledParameterWithOptions("simple", "recordId", chi.URLParam(r, "recordId"), &recordId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
-	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "recordId", Err: err})
-		return
-	}
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
-
-	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.DeleteVehiclesVehicleIdMaintenanceRecordId(w, r, vehicleId, recordId)
-	}))
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler.ServeHTTP(w, r)
-}
-
-// GetVehiclesVehicleIdMaintenanceRecordId operation middleware
-func (siw *ServerInterfaceWrapper) GetVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request) {
+// DeleteMaintenanceRecord operation middleware
+func (siw *ServerInterfaceWrapper) DeleteMaintenanceRecord(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -429,7 +389,7 @@ func (siw *ServerInterfaceWrapper) GetVehiclesVehicleIdMaintenanceRecordId(w htt
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetVehiclesVehicleIdMaintenanceRecordId(w, r, vehicleId, recordId)
+		siw.Handler.DeleteMaintenanceRecord(w, r, vehicleId, recordId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -439,8 +399,8 @@ func (siw *ServerInterfaceWrapper) GetVehiclesVehicleIdMaintenanceRecordId(w htt
 	handler.ServeHTTP(w, r)
 }
 
-// PutVehiclesVehicleIdMaintenanceRecordId operation middleware
-func (siw *ServerInterfaceWrapper) PutVehiclesVehicleIdMaintenanceRecordId(w http.ResponseWriter, r *http.Request) {
+// GetMaintenanceRecord operation middleware
+func (siw *ServerInterfaceWrapper) GetMaintenanceRecord(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
@@ -469,7 +429,47 @@ func (siw *ServerInterfaceWrapper) PutVehiclesVehicleIdMaintenanceRecordId(w htt
 	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PutVehiclesVehicleIdMaintenanceRecordId(w, r, vehicleId, recordId)
+		siw.Handler.GetMaintenanceRecord(w, r, vehicleId, recordId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdateMaintenanceRecord operation middleware
+func (siw *ServerInterfaceWrapper) UpdateMaintenanceRecord(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "vehicleId" -------------
+	var vehicleId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "vehicleId", chi.URLParam(r, "vehicleId"), &vehicleId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "vehicleId", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "recordId" -------------
+	var recordId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "recordId", chi.URLParam(r, "recordId"), &recordId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "recordId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateMaintenanceRecord(w, r, vehicleId, recordId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -593,34 +593,34 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	}
 
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/vehicles", wrapper.GetVehicles)
+		r.Get(options.BaseURL+"/vehicles", wrapper.ListVehicles)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/vehicles", wrapper.PostVehicles)
+		r.Post(options.BaseURL+"/vehicles", wrapper.CreateVehicle)
 	})
 	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/vehicles/{vehicleId}", wrapper.DeleteVehiclesVehicleId)
+		r.Delete(options.BaseURL+"/vehicles/{vehicleId}", wrapper.DeleteVehicle)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/vehicles/{vehicleId}", wrapper.GetVehiclesVehicleId)
+		r.Get(options.BaseURL+"/vehicles/{vehicleId}", wrapper.GetVehicle)
 	})
 	r.Group(func(r chi.Router) {
-		r.Put(options.BaseURL+"/vehicles/{vehicleId}", wrapper.PutVehiclesVehicleId)
+		r.Put(options.BaseURL+"/vehicles/{vehicleId}", wrapper.UpdateVehicle)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/vehicles/{vehicleId}/maintenance", wrapper.GetVehiclesVehicleIdMaintenance)
+		r.Get(options.BaseURL+"/vehicles/{vehicleId}/maintenance", wrapper.ListMaintenanceRecords)
 	})
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/vehicles/{vehicleId}/maintenance", wrapper.PostVehiclesVehicleIdMaintenance)
+		r.Post(options.BaseURL+"/vehicles/{vehicleId}/maintenance", wrapper.CreateMaintenanceRecord)
 	})
 	r.Group(func(r chi.Router) {
-		r.Delete(options.BaseURL+"/vehicles/{vehicleId}/maintenance/{recordId}", wrapper.DeleteVehiclesVehicleIdMaintenanceRecordId)
+		r.Delete(options.BaseURL+"/vehicles/{vehicleId}/maintenance/{recordId}", wrapper.DeleteMaintenanceRecord)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/vehicles/{vehicleId}/maintenance/{recordId}", wrapper.GetVehiclesVehicleIdMaintenanceRecordId)
+		r.Get(options.BaseURL+"/vehicles/{vehicleId}/maintenance/{recordId}", wrapper.GetMaintenanceRecord)
 	})
 	r.Group(func(r chi.Router) {
-		r.Put(options.BaseURL+"/vehicles/{vehicleId}/maintenance/{recordId}", wrapper.PutVehiclesVehicleIdMaintenanceRecordId)
+		r.Put(options.BaseURL+"/vehicles/{vehicleId}/maintenance/{recordId}", wrapper.UpdateMaintenanceRecord)
 	})
 
 	return r
@@ -629,22 +629,22 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

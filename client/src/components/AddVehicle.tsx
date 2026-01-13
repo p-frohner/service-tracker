@@ -2,7 +2,7 @@ import { Box, Button, Container, Stack, TextField } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Controller, useForm } from "react-hook-form";
-import { getGetVehiclesQueryKey, usePostVehicles } from "../api";
+import { getGetVehicleQueryKey, useCreateVehicle } from "../api";
 import { Breadcrumbs } from "./Breadcrumbs";
 
 type FormValues = {
@@ -18,10 +18,10 @@ export const AddVehicle = () => {
 		defaultValues: { make: "", model: "", year: 2013 },
 	});
 
-	const { mutate, isPending } = usePostVehicles({
+	const { mutate, isPending } = useCreateVehicle({
 		mutation: {
 			onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: getGetVehiclesQueryKey() });
+				queryClient.invalidateQueries({ queryKey: getGetVehicleQueryKey() });
 				reset();
 				navigate({ to: "/" });
 			},
