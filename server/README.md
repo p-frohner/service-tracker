@@ -9,6 +9,15 @@ This is the Go backend for the service tracker. It uses a contract-first and sch
  - Codegen: sqlc (SQL to Go) and oapi-codegen (OpenAPI to Go)
  - Hot Reload: Air
 
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `IMAGE_STORAGE_PATH` | Local path for storing vehicle images | Yes |
+| `SERPER_API_KEY` | API key for image search ([serper.dev](https://serper.dev)) | Yes |
+| `PORT` | Server port (default: 8080) | No |
+
 ## Local Development
 
 ### Prerequisites

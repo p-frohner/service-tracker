@@ -1,34 +1,27 @@
 package handlers
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"service-tracker/internal/api"
 	"service-tracker/internal/db"
-
-	"github.com/jackc/pgx/v5/pgtype"
+	"strings"
+	"time"
 )
 
-func (s *Server) ListVehicles(w http.ResponseWriter, r *http.Request) {
-	dbVehicles, err := s.Queries.ListVehicles(r.Context())
-	if err != nil {
-		s.writeError(w, http.StatusInternalServerError, "Could not fetch vehicles from database")
-		return
-	}
+type SerperRequest struct {
+	Q string `json:"q"`
+}
 
-	vehicles := make([]api.Vehicle, 0, len(dbVehicles))
-
-	for _, v := range dbVehicles {
-		idStr := uuidToString(v.ID)
-
-		vehicles = append(vehicles, api.Vehicle{
-			Id:    &idStr,
-			Make:  v.Make,
-			Model: v.Model,
-			Year:  int(v.Year),
-		})
-	}
-
-	s.writeJSON(w, http.StatusCreated, vehicles)
+type SerperResponse struct {
+	Images []struct {
+		ImageUrl string `json:"imageUrl"`
+		Title    string `json:"title"`
+	} `json:"images"`
 }
 
 func (s *Server) CreateVehicle(w http.ResponseWriter, r *http.Request) {
@@ -50,23 +43,11 @@ func (s *Server) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Use Serper API to fetch a few images about the vehicle and store image urls in the db
+	bgCtx := context.Background()
+	go s.fetchAndStoreVehicleImages(bgCtx, createdVehicle)
+
 	s.writeJSON(w, http.StatusCreated, createdVehicle)
-}
-
-func (s *Server) DeleteVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
-	id, err := stringToUUID(vehicleId)
-	if err != nil {
-		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
-		return
-	}
-
-	err = s.Queries.DeleteVehicle(r.Context(), id)
-	if err != nil {
-		s.writeError(w, http.StatusInternalServerError, "Could not delete vehicle")
-		return
-	}
-
-	w.WriteHeader(http.StatusNoContent)
 }
 
 func (s *Server) GetVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
@@ -91,6 +72,77 @@ func (s *Server) GetVehicle(w http.ResponseWriter, r *http.Request, vehicleId st
 	}
 
 	s.writeJSON(w, http.StatusOK, response)
+}
+
+func (s *Server) GetVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	id, err := stringToUUID(vehicleId)
+	if err != nil {
+		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
+		return
+	}
+
+	dbImages, err := s.Queries.GetVehicleImages(r.Context(), id)
+	if err != nil {
+		s.writeError(w, http.StatusInternalServerError, "Could not fetch images")
+		return
+	}
+
+	images := make([]api.VehicleImage, 0, len(dbImages))
+	for _, img := range dbImages {
+		imgID := int(img.ID)
+		// Return full path for local serving
+		filename := fmt.Sprintf("/images/%s/%s", vehicleId, img.Filename)
+		images = append(images, api.VehicleImage{
+			Id:       &imgID,
+			Filename: filename,
+		})
+	}
+
+	s.writeJSON(w, http.StatusOK, images)
+}
+
+func (s *Server) DeleteVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	id, err := stringToUUID(vehicleId)
+	if err != nil {
+		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
+		return
+	}
+
+	err = s.Queries.DeleteVehicle(r.Context(), id)
+	if err != nil {
+		s.writeError(w, http.StatusInternalServerError, "Could not delete vehicle")
+		return
+	}
+
+	// Clean up local image files
+	if err := s.ImageStore.Delete(vehicleId); err != nil {
+		log.Printf("Failed to delete image files for vehicle %s: %v", vehicleId, err)
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func (s *Server) ListVehicles(w http.ResponseWriter, r *http.Request) {
+	dbVehicles, err := s.Queries.ListVehicles(r.Context())
+	if err != nil {
+		s.writeError(w, http.StatusInternalServerError, "Could not fetch vehicles from database")
+		return
+	}
+
+	vehicles := make([]api.Vehicle, 0, len(dbVehicles))
+
+	for _, v := range dbVehicles {
+		idStr := uuidToString(v.ID)
+
+		vehicles = append(vehicles, api.Vehicle{
+			Id:    &idStr,
+			Make:  v.Make,
+			Model: v.Model,
+			Year:  int(v.Year),
+		})
+	}
+
+	s.writeJSON(w, http.StatusOK, vehicles)
 }
 
 func (s *Server) UpdateVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
@@ -121,60 +173,93 @@ func (s *Server) UpdateVehicle(w http.ResponseWriter, r *http.Request, vehicleId
 	s.writeJSON(w, http.StatusOK, updatedVehicle)
 }
 
-func (s *Server) ListMaintenanceRecords(w http.ResponseWriter, r *http.Request, vehicleId string) {
-}
+// fetchAndStoreVehicleImages looks up images, downloads them locally, and notifies the FE via websocket
+func (s *Server) fetchAndStoreVehicleImages(ctx context.Context, v db.Vehicle) {
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
 
-func (s *Server) GetMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
-}
+	vehicleID := uuidToString(v.ID)
+	const targetCount = 6 // 2 Rows
+	const fetchLimit = 10 // Default number, also account for download failures
 
-func (s *Server) DeleteMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
-}
-
-func (s *Server) UpdateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string, maintenanceRecordId string) {
-}
-
-func (s *Server) CreateMaintenanceRecord(w http.ResponseWriter, r *http.Request, vehicleId string) {
-	vehUUID, err := stringToUUID(vehicleId)
+	imageURLs, err := s.searchCarImages(v.Make, v.Model, fmt.Sprintf("%d", v.Year), fetchLimit)
 	if err != nil {
-		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
+		log.Printf("Background image search failed: %v", err)
 		return
 	}
 
-	_, err = s.Queries.GetVehicle(r.Context(), vehUUID)
+	var savedFilenames []string
+	for _, imageURL := range imageURLs {
+		// Stop once we have enough images
+		if len(savedFilenames) >= targetCount {
+			break
+		}
+
+		// Download image locally
+		filename, err := s.ImageStore.Download(ctx, vehicleID, imageURL)
+		if err != nil {
+			log.Printf("Failed to download image: %v", err)
+			continue
+		}
+
+		// Store filename in database
+		err = s.Queries.AddVehicleImage(ctx, db.AddVehicleImageParams{
+			VehicleID: v.ID,
+			Filename:  filename,
+		})
+		if err != nil {
+			log.Printf("Failed to save image filename: %v", err)
+			continue
+		}
+		savedFilenames = append(savedFilenames, fmt.Sprintf("/images/%s/%s", vehicleID, filename))
+	}
+
+	if len(savedFilenames) > 0 {
+		notification := map[string]interface{}{
+			"type":       "IMAGES_READY",
+			"vehicle_id": v.ID,
+			"filenames":  savedFilenames,
+		}
+		msg, _ := json.Marshal(notification)
+		s.Hub.broadcast <- msg
+	}
+}
+
+// searchCarImages finds images using Serper API
+func (s *Server) searchCarImages(brand, model, year string, limit int) ([]string, error) {
+	url := "https://google.serper.dev/images"
+
+	// Create a query for high-quality results
+	query := fmt.Sprintf("%s %s %s high resolution", year, brand, model)
+	// Use json.Marshal to safely escape special characters and prevent JSON injection
+	payloadBytes, _ := json.Marshal(SerperRequest{Q: query})
+	payload := strings.NewReader(string(payloadBytes))
+
+	req, _ := http.NewRequest("POST", url, payload)
+	req.Header.Add("X-API-KEY", os.Getenv("SERPER_API_KEY"))
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		s.writeError(w, http.StatusNotFound, "Vehicle not found")
-		return
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	var result SerperResponse
+	if err := json.NewDecoder(res.Body).Decode(&result); err != nil {
+		return nil, err
 	}
 
-	var newRecord api.MaintenanceRecord
-	if err := s.parseJSON(w, r, &newRecord); err != nil {
-		return
+	if len(result.Images) == 0 {
+		return nil, fmt.Errorf("no images found")
 	}
 
-	params := db.CreateMaintenanceRecordParams{
-		VehicleID:   vehUUID,
-		Date:        pgtype.Date{Time: newRecord.Date.Time, Valid: true},
-		Description: newRecord.Description,
-		Mileage:     int32(newRecord.Mileage),
-		Cost:        newRecord.Cost,
-		Notes:       newRecord.Notes,
+	// Return up to 'limit' image URLs
+	count := min(len(result.Images), limit)
+	urls := make([]string, count)
+	for i := range count {
+		urls[i] = result.Images[i].ImageUrl
 	}
 
-	created, err := s.Queries.CreateMaintenanceRecord(r.Context(), params)
-	if err != nil {
-		s.writeError(w, http.StatusInternalServerError, "Could not create maintenance record")
-		return
-	}
-
-	idStr := uuidToString(created.ID)
-	response := api.MaintenanceRecord{
-		Id:          &idStr,
-		Date:        newRecord.Date,
-		Description: created.Description,
-		Mileage:     int(created.Mileage),
-		Cost:        created.Cost,
-		Notes:       created.Notes,
-	}
-
-	s.writeJSON(w, http.StatusCreated, response)
+	return urls, nil
 }

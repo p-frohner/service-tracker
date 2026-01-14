@@ -2,6 +2,15 @@
 
 Exploring Golang by building Service Tracker—a simple Go + React app to manage vehicle maintenance history and costs. Yes, I realized a few days in how misleading the name sounds for a dev project! 🤷‍♂️
 
+## Environment Setup
+Create a `.env` file in the root directory with your API keys:
+
+```
+SERPER_API_KEY=your-serper-api-key
+```
+
+Get your Serper API key from [serper.dev](https://serper.dev). See `.env.example` for a template.
+
 ## Using Docker
 The easiest way to get started. This handles the Database and the Go server together. From the root directory:
 

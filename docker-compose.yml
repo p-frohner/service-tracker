@@ -24,11 +24,14 @@ services:
       - "8080:8080"
     environment:
       - DATABASE_URL=postgres://postgres:postgres@db:5432/service_tracker
+      - IMAGE_STORAGE_PATH=/app/storage/images
+      - SERPER_API_KEY=${SERPER_API_KEY}
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - ./server:/app
+      - ./server/storage/images:/app/storage/images
 
   client:
     build: ./client
@@ -44,3 +47,4 @@ services:
 
 volumes:
   postgres_data:
+  image_storage:

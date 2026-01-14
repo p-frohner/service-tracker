@@ -22,5 +22,10 @@ export const customFetch = async <T>(url: string, options: RequestInit): Promise
 		throw errorData;
 	}
 
+	// Handle 204 No Content or empty responses
+	if (response.status === 204 || response.headers.get("content-length") === "0") {
+		return undefined as T;
+	}
+
 	return response.json();
 };

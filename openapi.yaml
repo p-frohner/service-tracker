@@ -69,6 +69,25 @@ paths:
       responses:
         '204':
           description: Vehicle deleted successfully
+  /vehicles/{vehicleId}/images:
+    get:
+      operationId: getVehicleImages
+      summary: Retrieve images for a vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of image URLs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleImage'
   /vehicles/{vehicleId}/maintenance:
     get:
       operationId: listMaintenanceRecords
@@ -192,6 +211,16 @@ components:
         - make
         - model
         - year
+    VehicleImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        filename:
+          type: string
+      required:
+        - filename
   securitySchemes:
     bearerAuth:
       type: http

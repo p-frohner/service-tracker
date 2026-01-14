@@ -45,6 +45,12 @@ type Vehicle struct {
 	Year  int     `json:"year"`
 }
 
+// VehicleImage defines model for VehicleImage.
+type VehicleImage struct {
+	Filename string `json:"filename"`
+	Id       *int   `json:"id,omitempty"`
+}
+
 // CreateVehicleJSONRequestBody defines body for CreateVehicle for application/json ContentType.
 type CreateVehicleJSONRequestBody = Vehicle
 
@@ -74,6 +80,9 @@ type ServerInterface interface {
 	// Update an existing vehicle
 	// (PUT /vehicles/{vehicleId})
 	UpdateVehicle(w http.ResponseWriter, r *http.Request, vehicleId string)
+	// Retrieve images for a vehicle
+	// (GET /vehicles/{vehicleId}/images)
+	GetVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string)
 	// Retrieve maintenance records for a vehicle
 	// (GET /vehicles/{vehicleId}/maintenance)
 	ListMaintenanceRecords(w http.ResponseWriter, r *http.Request, vehicleId string)
@@ -122,6 +131,12 @@ func (_ Unimplemented) GetVehicle(w http.ResponseWriter, r *http.Request, vehicl
 // Update an existing vehicle
 // (PUT /vehicles/{vehicleId})
 func (_ Unimplemented) UpdateVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Retrieve images for a vehicle
+// (GET /vehicles/{vehicleId}/images)
+func (_ Unimplemented) GetVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -288,6 +303,37 @@ func (siw *ServerInterfaceWrapper) UpdateVehicle(w http.ResponseWriter, r *http.
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.UpdateVehicle(w, r, vehicleId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetVehicleImages operation middleware
+func (siw *ServerInterfaceWrapper) GetVehicleImages(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "vehicleId" -------------
+	var vehicleId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "vehicleId", chi.URLParam(r, "vehicleId"), &vehicleId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "vehicleId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetVehicleImages(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -608,6 +654,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Put(options.BaseURL+"/vehicles/{vehicleId}", wrapper.UpdateVehicle)
 	})
 	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/vehicles/{vehicleId}/images", wrapper.GetVehicleImages)
+	})
+	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/vehicles/{vehicleId}/maintenance", wrapper.ListMaintenanceRecords)
 	})
 	r.Group(func(r chi.Router) {
@@ -629,22 +678,23 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
+	"3IlOcxGaPL23ET/QPDb/BgAA///C10YLSBIAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

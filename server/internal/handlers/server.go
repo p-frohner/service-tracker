@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"net/http"
+	"os"
 	"service-tracker/internal/api"
 	"service-tracker/internal/db"
+	"service-tracker/internal/storage"
 
 	"time"
 
@@ -14,14 +16,26 @@ import (
 )
 
 type Server struct {
-	Pool    *pgxpool.Pool
-	Queries *db.Queries
+	Pool       *pgxpool.Pool
+	Queries    *db.Queries
+	Hub        *Hub
+	ImageStore *storage.ImageStore
 }
 
 func NewServer(pool *pgxpool.Pool) *Server {
+	hub := NewHub()
+	go hub.Run()
+
+	storagePath := os.Getenv("IMAGE_STORAGE_PATH")
+	if storagePath == "" {
+		storagePath = "./storage/images"
+	}
+
 	return &Server{
-		Pool:    pool,
-		Queries: db.New(pool),
+		Pool:       pool,
+		Queries:    db.New(pool),
+		Hub:        hub,
+		ImageStore: storage.NewImageStore(storagePath),
 	}
 }
 
@@ -37,6 +51,12 @@ func (s *Server) Routes() http.Handler {
 		MaxAge:           300,
 	}))
 	r.Use(middleware.Logger)
+
+	// WebSocket endpoint
+	r.Get("/ws", s.HandleWebSocket)
+
+	// Static image serving
+	r.Get("/images/{vehicleId}/{filename}", s.ServeImage)
 
 	// Register OpenAPI generated routes
 	api.HandlerFromMux(s, r)

@@ -11,6 +11,21 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const addVehicleImage = `-- name: AddVehicleImage :exec
+INSERT INTO vehicle_images (vehicle_id, filename)
+VALUES ($1, $2)
+`
+
+type AddVehicleImageParams struct {
+	VehicleID pgtype.UUID `json:"vehicle_id"`
+	Filename  string      `json:"filename"`
+}
+
+func (q *Queries) AddVehicleImage(ctx context.Context, arg AddVehicleImageParams) error {
+	_, err := q.db.Exec(ctx, addVehicleImage, arg.VehicleID, arg.Filename)
+	return err
+}
+
 const createMaintenanceRecord = `-- name: CreateMaintenanceRecord :one
 INSERT INTO maintenance_records (vehicle_id, date, description, mileage, cost, notes)
 VALUES ($1, $2, $3, $4, $5, $6)
@@ -100,6 +115,31 @@ func (q *Queries) GetVehicle(ctx context.Context, id pgtype.UUID) (Vehicle, erro
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const getVehicleImages = `-- name: GetVehicleImages :many
+SELECT id, vehicle_id, filename FROM vehicle_images
+WHERE vehicle_id = $1
+`
+
+func (q *Queries) GetVehicleImages(ctx context.Context, vehicleID pgtype.UUID) ([]VehicleImage, error) {
+	rows, err := q.db.Query(ctx, getVehicleImages, vehicleID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []VehicleImage
+	for rows.Next() {
+		var i VehicleImage
+		if err := rows.Scan(&i.ID, &i.VehicleID, &i.Filename); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const listVehicles = `-- name: ListVehicles :many

@@ -25,3 +25,11 @@ WHERE id = $1;
 INSERT INTO maintenance_records (vehicle_id, date, description, mileage, cost, notes)
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
+
+-- name: AddVehicleImage :exec
+INSERT INTO vehicle_images (vehicle_id, filename)
+VALUES ($1, $2);
+
+-- name: GetVehicleImages :many
+SELECT * FROM vehicle_images
+WHERE vehicle_id = $1;

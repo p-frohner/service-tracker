@@ -76,6 +76,11 @@ export interface Vehicle {
   year: number;
 }
 
+export interface VehicleImage {
+  readonly id?: number;
+  filename: string;
+}
+
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
@@ -498,6 +503,107 @@ export const useDeleteVehicle = <TError = ErrorType<unknown>,
       return useMutation(mutationOptions, queryClient);
     }
     
+/**
+ * @summary Retrieve images for a vehicle
+ */
+export const getGetVehicleImagesUrl = (vehicleId: string,) => {
+
+
+  
+
+  return `http://localhost:8080/vehicles/${vehicleId}/images`
+}
+
+export const getVehicleImages = async (vehicleId: string, options?: RequestInit): Promise<VehicleImage[]> => {
+  
+  return customFetch<VehicleImage[]>(getGetVehicleImagesUrl(vehicleId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetVehicleImagesQueryKey = (vehicleId?: string,) => {
+    return [
+    `http://localhost:8080/vehicles/${vehicleId}/images`
+    ] as const;
+    }
+
+    
+export const getGetVehicleImagesQueryOptions = <TData = Awaited<ReturnType<typeof getVehicleImages>>, TError = ErrorType<unknown>>(vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicleImages>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetVehicleImagesQueryKey(vehicleId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getVehicleImages>>> = ({ signal }) => getVehicleImages(vehicleId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(vehicleId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getVehicleImages>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetVehicleImagesQueryResult = NonNullable<Awaited<ReturnType<typeof getVehicleImages>>>
+export type GetVehicleImagesQueryError = ErrorType<unknown>
+
+
+export function useGetVehicleImages<TData = Awaited<ReturnType<typeof getVehicleImages>>, TError = ErrorType<unknown>>(
+ vehicleId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicleImages>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getVehicleImages>>,
+          TError,
+          Awaited<ReturnType<typeof getVehicleImages>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetVehicleImages<TData = Awaited<ReturnType<typeof getVehicleImages>>, TError = ErrorType<unknown>>(
+ vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicleImages>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getVehicleImages>>,
+          TError,
+          Awaited<ReturnType<typeof getVehicleImages>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetVehicleImages<TData = Awaited<ReturnType<typeof getVehicleImages>>, TError = ErrorType<unknown>>(
+ vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicleImages>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Retrieve images for a vehicle
+ */
+
+export function useGetVehicleImages<TData = Awaited<ReturnType<typeof getVehicleImages>>, TError = ErrorType<unknown>>(
+ vehicleId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getVehicleImages>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetVehicleImagesQueryOptions(vehicleId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+
 /**
  * @summary Retrieve maintenance records for a vehicle
  */

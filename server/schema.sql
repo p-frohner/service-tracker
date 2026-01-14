@@ -18,3 +18,9 @@ CREATE TABLE maintenance_records (
     notes       TEXT,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE vehicle_images (
+    id SERIAL PRIMARY KEY,
+    vehicle_id UUID REFERENCES vehicles(id) ON DELETE CASCADE,
+    filename TEXT NOT NULL
+);

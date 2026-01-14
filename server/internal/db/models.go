@@ -26,3 +26,9 @@ type Vehicle struct {
 	Year      int32              `json:"year"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 }
+
+type VehicleImage struct {
+	ID        int32       `json:"id"`
+	VehicleID pgtype.UUID `json:"vehicle_id"`
+	Filename  string      `json:"filename"`
+}

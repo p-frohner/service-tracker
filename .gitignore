@@ -9,6 +9,7 @@
 !/server/pkg/api/
 !/server/pkg/api/server.gen.go
 /server/tmp/*
+/server/storage/
 
 # Client 
 ############################
@@ -24,6 +25,12 @@
 /client/dist
 /client/dist-ssr
 /client/*.local
+
+# Environment files
+############################
+
+.env
+.env.local
 
 # IDE configs
 ############################
