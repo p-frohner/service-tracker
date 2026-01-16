@@ -1,6 +1,32 @@
 import { Box, Skeleton, styled } from "@mui/material";
 import type { VehicleImage } from "../api";
 
+export const Carousel = ({ images }: { images: VehicleImage[] }) => {
+	if (images.length === 0) {
+		return (
+			<Skeleton
+				variant="rectangular"
+				width="100%"
+				height={300}
+				sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}
+			>
+				Downloading images...
+			</Skeleton>
+		);
+	}
+	return (
+		<CarouselWrapper>
+			<Box className="carousel">
+				{images.map((image) => (
+					<Box key={image.filename} className="carousel-slide">
+						<img src={`${import.meta.env.VITE_API_URL}${image.filename}`} alt="" loading="lazy" />
+					</Box>
+				))}
+			</Box>
+		</CarouselWrapper>
+	);
+};
+
 const CarouselWrapper = styled(Box)(({ theme }) => ({
 	position: "relative",
 	margin: `${theme.spacing(1.5)} 0`,
@@ -106,29 +132,3 @@ const CarouselWrapper = styled(Box)(({ theme }) => ({
 		right: "1.5rem",
 	},
 }));
-
-export const Carousel = ({ images }: { images: VehicleImage[] }) => {
-	if (images.length === 0) {
-		return (
-			<Skeleton
-				variant="rectangular"
-				width="100%"
-				height={300}
-				sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}
-			>
-				Downloading images...
-			</Skeleton>
-		);
-	}
-	return (
-		<CarouselWrapper>
-			<Box className="carousel">
-				{images.map((image) => (
-					<Box key={image.filename} className="carousel-slide">
-						<img src={`${import.meta.env.VITE_API_URL}${image.filename}`} alt="" loading="lazy" />
-					</Box>
-				))}
-			</Box>
-		</CarouselWrapper>
-	);
-};

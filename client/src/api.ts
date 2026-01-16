@@ -71,7 +71,7 @@ export interface Vehicle {
   model: string;
   /**
    * @minimum 1900
-   * @maximum 2025
+   * @maximum 2026
    */
   year: number;
 }

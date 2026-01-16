@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Controller, useForm } from "react-hook-form";
 import { getListVehiclesQueryKey, useCreateVehicle } from "../../api";
+import { createVehicleBodyYearMax, createVehicleBodyYearMin } from "../../api.zod";
 import { Breadcrumbs } from "../Breadcrumbs";
 
 type FormValues = {
@@ -69,7 +70,7 @@ export const AddVehicle = () => {
 								type="number"
 								label="Year"
 								fullWidth
-								slotProps={{ htmlInput: { max: 2026 } }} // TODO: should be in sync with openapi spec, but how?
+								slotProps={{ htmlInput: { min: createVehicleBodyYearMin, max: createVehicleBodyYearMax } }}
 								onChange={(e) => field.onChange(Number(e.target.value))}
 							/>
 						)}

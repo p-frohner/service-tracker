@@ -19,4 +19,11 @@ export default defineConfig({
 			},
 		},
 	},
+	"service-tracker-zod": {
+		input: "../openapi.yaml",
+		output: {
+			target: "./src/api.zod.ts",
+			client: "zod",
+		},
+	},
 });
