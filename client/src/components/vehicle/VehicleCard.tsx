@@ -1,7 +1,7 @@
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import { Box, Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
 
-import type { Vehicle } from "../api";
+import type { Vehicle } from "../../api";
 
 type Props = {
 	vehicle: Vehicle;

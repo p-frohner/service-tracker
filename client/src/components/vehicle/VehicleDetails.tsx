@@ -1,4 +1,4 @@
-import { Box, Button, Container, ImageList, ImageListItem, Stack } from "@mui/material";
+import { Box, Button, Container, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
@@ -8,11 +8,11 @@ import {
 	useDeleteVehicle,
 	useGetVehicle,
 	useGetVehicleImages,
-} from "../api";
-import { useVehicleWebSocket } from "../hooks/useVehicleWebSocket";
-import { Route } from "../routes/vehicle-details.$vehicleId";
-import { Breadcrumbs } from "./Breadcrumbs";
-import { Carousel } from "./Carousel";
+} from "../../api";
+import { useVehicleWebSocket } from "../../hooks/useVehicleWebSocket";
+import { Route } from "../../routes/vehicle-details.$vehicleId";
+import { Breadcrumbs } from "../Breadcrumbs";
+import { Carousel } from "../Carousel";
 
 export const VehicleDetails = () => {
 	const { vehicleId } = Route.useParams();

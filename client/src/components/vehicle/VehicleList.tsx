@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useNavigate } from "@tanstack/react-router";
-import { useListVehicles } from "../api";
+import { useListVehicles } from "../../api";
 import { VehicleCard } from "./VehicleCard";
 
 export const VehicleList = () => {

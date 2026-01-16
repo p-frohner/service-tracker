@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { Link } from "./Link";
+import { Link } from "../Link";
 import { VehicleList } from "./VehicleList";
 
 export const VehicleManager = () => {
