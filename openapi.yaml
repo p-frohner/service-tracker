@@ -210,7 +210,7 @@ components:
         year:
           type: integer
           minimum: 1900
-          maximum: 2025
+          maximum: 2026
       required:
         - id
         - make

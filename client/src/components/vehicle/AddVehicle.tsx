@@ -69,6 +69,7 @@ export const AddVehicle = () => {
 								type="number"
 								label="Year"
 								fullWidth
+								slotProps={{ htmlInput: { max: 2026 } }} // TODO: should be in sync with openapi spec, but how?
 								onChange={(e) => field.onChange(Number(e.target.value))}
 							/>
 						)}
