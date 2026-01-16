@@ -10,6 +10,7 @@ This is the React frontend for the service tracker. It uses generated TypeScript
  - Data Fetching: TanStack Query
  - UI Library: Material UI (MUI)
  - Codegen: Orval (OpenAPI to TypeScript/React Query hooks)
+ - WebSocket: Used to receive updates from the server after images have been downloaded and stored locally
 
 ## Local Development
 

@@ -66,7 +66,7 @@ export interface MaintenanceRecord {
 }
 
 export interface Vehicle {
-  readonly id?: string;
+  readonly id: string;
   make: string;
   model: string;
   /**
@@ -197,9 +197,9 @@ export const getCreateVehicleUrl = () => {
   return `http://localhost:8080/vehicles`
 }
 
-export const createVehicle = async (vehicle: NonReadonly<Vehicle>, options?: RequestInit): Promise<void> => {
+export const createVehicle = async (vehicle: NonReadonly<Vehicle>, options?: RequestInit): Promise<Vehicle> => {
   
-  return customFetch<void>(getCreateVehicleUrl(),
+  return customFetch<Vehicle>(getCreateVehicleUrl(),
   {      
     ...options,
     method: 'POST',

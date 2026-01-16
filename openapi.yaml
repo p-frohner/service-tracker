@@ -32,6 +32,10 @@ paths:
       responses:
         '201':
           description: Vehicle created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vehicle'
   /vehicles/{vehicleId}:
     parameters:
       - in: path
@@ -208,6 +212,7 @@ components:
           minimum: 1900
           maximum: 2025
       required:
+        - id
         - make
         - model
         - year

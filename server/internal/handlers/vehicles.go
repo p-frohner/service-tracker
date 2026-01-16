@@ -43,7 +43,7 @@ func (s *Server) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Use Serper API to fetch a few images about the vehicle and store image urls in the db
+	// Use Serper API to fetch a few images about the vehicle and store images in storage and add them to our db
 	bgCtx := context.Background()
 	go s.fetchAndStoreVehicleImages(bgCtx, createdVehicle)
 

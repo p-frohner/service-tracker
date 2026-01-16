@@ -1,22 +1,23 @@
 import { Box, Button, Container, ImageList, ImageListItem, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { useCallback } from "react";
 import {
+	getGetVehicleImagesQueryKey,
 	getListVehiclesQueryKey,
 	useDeleteVehicle,
 	useGetVehicle,
 	useGetVehicleImages,
 } from "../api";
+import { useVehicleWebSocket } from "../hooks/useVehicleWebSocket";
 import { Route } from "../routes/vehicle-details.$vehicleId";
 import { Breadcrumbs } from "./Breadcrumbs";
 
 export const VehicleDetails = () => {
 	const { vehicleId } = Route.useParams();
-
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
-
-	const { data: vehicle, error } = useGetVehicle(vehicleId);
+	const { data: vehicle } = useGetVehicle(vehicleId);
 	const { data: vehicleImages = [] } = useGetVehicleImages(vehicleId);
 	const { mutate: deleteVehicle } = useDeleteVehicle({
 		mutation: {
@@ -26,6 +27,13 @@ export const VehicleDetails = () => {
 			},
 		},
 	});
+
+	const handleImagesReady = useCallback(() => {
+		queryClient.invalidateQueries({ queryKey: getGetVehicleImagesQueryKey(vehicleId) });
+	}, [queryClient, vehicleId]);
+
+	useVehicleWebSocket(vehicleId, handleImagesReady);
+
 	const vehicleName = vehicle ? `${vehicle.make} ${vehicle.model} - ${vehicle.year}` : "";
 
 	return (
@@ -53,6 +61,7 @@ export const VehicleDetails = () => {
 				)}
 			</Box>
 			<Box sx={{ py: 3 }}>
+				{/* TODO: Need to add confirm dialog for delete */}
 				<Button
 					type="submit"
 					variant="contained"
