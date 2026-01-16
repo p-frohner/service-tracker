@@ -9,6 +9,7 @@ const getWebSocketUrl = () => {
 	const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 	const url = new URL(apiUrl);
 	url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+
 	return `${url.origin}/ws`;
 };
 

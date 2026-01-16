@@ -12,6 +12,7 @@ import {
 import { useVehicleWebSocket } from "../hooks/useVehicleWebSocket";
 import { Route } from "../routes/vehicle-details.$vehicleId";
 import { Breadcrumbs } from "./Breadcrumbs";
+import { Carousel } from "./Carousel";
 
 export const VehicleDetails = () => {
 	const { vehicleId } = Route.useParams();
@@ -38,28 +39,10 @@ export const VehicleDetails = () => {
 
 	return (
 		<Container maxWidth="sm">
-			<Box p={2}>
+			<Stack gap={2} p={2}>
 				<Breadcrumbs items={[{ label: "Vehicles", url: "/" }, { label: vehicleName }]} />
-				{vehicleImages.length > 0 && (
-					<Stack spacing={2} mt={3}>
-						<Box>
-							<Box sx={{ width: "sm", height: 350, overflowY: "scroll" }}>
-								<ImageList variant="masonry" cols={3} gap={8}>
-									{vehicleImages.map((image) => (
-										<ImageListItem key={image.filename}>
-											<img
-												src={`${import.meta.env.VITE_API_URL}${image.filename}`}
-												alt={vehicleName}
-												loading="lazy"
-											/>
-										</ImageListItem>
-									))}
-								</ImageList>
-							</Box>
-						</Box>
-					</Stack>
-				)}
-			</Box>
+				<Carousel images={vehicleImages} />
+			</Stack>
 			<Box sx={{ py: 3 }}>
 				{/* TODO: Need to add confirm dialog for delete */}
 				<Button
