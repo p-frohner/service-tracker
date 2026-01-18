@@ -37,6 +37,19 @@ const CarouselWrapper = styled(Box)(({ theme }) => ({
 		overflowX: "auto",
 		borderRadius: "12px",
 		scrollbarWidth: "none",
+		"&::-webkit-scrollbar": {
+			height: "8px",
+		},
+		"&::-webkit-scrollbar-track": {
+			background: "transparent",
+		},
+		"&::-webkit-scrollbar-thumb": {
+			background: theme.palette.primary.main,
+			borderRadius: "4px",
+		},
+		"&::-webkit-scrollbar-thumb:hover": {
+			background: theme.palette.primary.dark,
+		},
 		scrollSnapType: "x mandatory",
 		scrollBehavior: "smooth",
 		scrollMarkerGroup: "after",
@@ -65,15 +78,15 @@ const CarouselWrapper = styled(Box)(({ theme }) => ({
 			borderRadius: "8px",
 			display: "block",
 			transition: "all 0.3s ease",
-			opacity: "0.5",
-			scale: "0.75",
+			opacity: 1,
+			scale: 1,
 		},
 	},
 
-	"@container slide scroll-state(snapped: x)": {
+	"@container slide scroll-state(snapped: none)": {
 		".carousel-slide img": {
-			opacity: "1",
-			scale: "1",
+			opacity: 0.5,
+			scale: 0.75,
 		},
 	},
 
