@@ -1,4 +1,4 @@
-import { Box, Button, Container, Stack } from "@mui/material";
+import { Box, Button, Container, DialogActions, DialogTitle, Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
@@ -13,9 +13,11 @@ import { useVehicleWebSocket } from "../../hooks/useVehicleWebSocket";
 import { Route } from "../../routes/vehicle-details.$vehicleId";
 import { Breadcrumbs } from "../Breadcrumbs";
 import { Carousel } from "../Carousel";
+import { Dialog, useDialog } from "../Dialog";
 
 export const VehicleDetails = () => {
 	const { vehicleId } = Route.useParams();
+	const { isOpen, anchorEl, open, close } = useDialog();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 	const { data: vehicle } = useGetVehicle(vehicleId);
@@ -44,19 +46,34 @@ export const VehicleDetails = () => {
 				<Carousel images={vehicleImages} />
 			</Stack>
 			<Box sx={{ py: 3 }}>
-				{/* TODO: Need to add confirm dialog for delete */}
 				<Button
 					type="submit"
 					variant="contained"
 					color="error"
 					fullWidth
 					size="large"
-					onClick={() => {
-						deleteVehicle({ vehicleId });
-					}}
+					onClick={open}
 				>
 					Delete Vehicle
 				</Button>
+				<Dialog open={isOpen} anchorEl={anchorEl} onClose={close}>
+					<DialogTitle>Are you sure?</DialogTitle>
+					<DialogActions sx={{ px: 3, pb: 3 }}>
+						<Button onClick={close} variant="outlined" fullWidth>
+							Close
+						</Button>
+						<Button
+							variant="contained"
+							onClick={() => {
+								deleteVehicle({ vehicleId });
+								close();
+							}}
+							fullWidth
+						>
+							Yes
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</Box>
 		</Container>
 	);
