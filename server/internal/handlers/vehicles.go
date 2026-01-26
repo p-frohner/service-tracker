@@ -43,10 +43,6 @@ func (s *Server) CreateVehicle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Use Serper API to fetch a few images about the vehicle and store images in storage and add them to our db
-	bgCtx := context.Background()
-	go s.fetchAndStoreVehicleImages(bgCtx, createdVehicle)
-
 	s.writeJSON(w, http.StatusCreated, createdVehicle)
 }
 
@@ -99,6 +95,30 @@ func (s *Server) GetVehicleImages(w http.ResponseWriter, r *http.Request, vehicl
 	}
 
 	s.writeJSON(w, http.StatusOK, images)
+}
+
+func (s *Server) FetchVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	if os.Getenv("SERPER_API_KEY") == "" {
+		s.writeError(w, http.StatusServiceUnavailable, "Image search is not configured")
+		return
+	}
+
+	id, err := stringToUUID(vehicleId)
+	if err != nil {
+		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")
+		return
+	}
+
+	vehicle, err := s.Queries.GetVehicle(r.Context(), id)
+	if err != nil {
+		s.writeError(w, http.StatusNotFound, "Vehicle not found")
+		return
+	}
+
+	bgCtx := context.Background()
+	go s.fetchAndStoreVehicleImages(bgCtx, vehicle)
+
+	w.WriteHeader(http.StatusAccepted)
 }
 
 func (s *Server) DeleteVehicle(w http.ResponseWriter, r *http.Request, vehicleId string) {

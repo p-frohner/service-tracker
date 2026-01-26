@@ -101,6 +101,14 @@ export const getVehicleImagesResponse = zod.array(getVehicleImagesResponseItem)
 
 
 /**
+ * @summary Trigger image download for a vehicle
+ */
+export const fetchVehicleImagesParams = zod.object({
+  "vehicleId": zod.string()
+})
+
+
+/**
  * @summary Retrieve maintenance records for a vehicle
  */
 export const listMaintenanceRecordsParams = zod.object({

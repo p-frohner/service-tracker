@@ -1,17 +1,49 @@
-import { Box, Skeleton, styled } from "@mui/material";
+import { Box, Button, Skeleton, styled } from "@mui/material";
 import type { VehicleImage } from "../api";
 
-export const Carousel = ({ images }: { images: VehicleImage[] }) => {
+type CarouselProps = {
+	images: VehicleImage[];
+	onDownloadImages?: () => void;
+	isDownloading?: boolean;
+	error?: string | null;
+};
+
+export const Carousel = ({ images, onDownloadImages, isDownloading, error }: CarouselProps) => {
 	if (images.length === 0) {
+		if (isDownloading) {
+			return (
+				<Skeleton
+					variant="rectangular"
+					width="100%"
+					height={300}
+					sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}
+				>
+					Downloading images...
+				</Skeleton>
+			);
+		}
 		return (
-			<Skeleton
-				variant="rectangular"
-				width="100%"
-				height={300}
-				sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}
+			<Box
+				sx={{
+					width: "100%",
+					height: 300,
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "center",
+					alignItems: "center",
+					bgcolor: "grey.100",
+					borderRadius: 2,
+					gap: 2,
+				}}
 			>
-				Downloading images...
-			</Skeleton>
+				{error ? (
+					<Box sx={{ color: "error.main", textAlign: "center", px: 2 }}>{error}</Box>
+				) : (
+					<Button variant="contained" onClick={onDownloadImages}>
+						Download Images
+					</Button>
+				)}
+			</Box>
 		);
 	}
 	return (

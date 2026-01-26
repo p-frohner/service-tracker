@@ -605,6 +605,77 @@ export function useGetVehicleImages<TData = Awaited<ReturnType<typeof getVehicle
 
 
 /**
+ * @summary Trigger image download for a vehicle
+ */
+export const getFetchVehicleImagesUrl = (vehicleId: string,) => {
+
+
+  
+
+  return `http://localhost:8080/vehicles/${vehicleId}/images`
+}
+
+export const fetchVehicleImages = async (vehicleId: string, options?: RequestInit): Promise<void> => {
+  
+  return customFetch<void>(getFetchVehicleImagesUrl(vehicleId),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getFetchVehicleImagesMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof fetchVehicleImages>>, TError,{vehicleId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof fetchVehicleImages>>, TError,{vehicleId: string}, TContext> => {
+
+const mutationKey = ['fetchVehicleImages'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof fetchVehicleImages>>, {vehicleId: string}> = (props) => {
+          const {vehicleId} = props ?? {};
+
+          return  fetchVehicleImages(vehicleId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FetchVehicleImagesMutationResult = NonNullable<Awaited<ReturnType<typeof fetchVehicleImages>>>
+    
+    export type FetchVehicleImagesMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Trigger image download for a vehicle
+ */
+export const useFetchVehicleImages = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof fetchVehicleImages>>, TError,{vehicleId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof fetchVehicleImages>>,
+        TError,
+        {vehicleId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getFetchVehicleImagesMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    
+/**
  * @summary Retrieve maintenance records for a vehicle
  */
 export const getListMaintenanceRecordsUrl = (vehicleId: string,) => {

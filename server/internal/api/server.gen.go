@@ -83,6 +83,9 @@ type ServerInterface interface {
 	// Retrieve images for a vehicle
 	// (GET /vehicles/{vehicleId}/images)
 	GetVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string)
+	// Trigger image download for a vehicle
+	// (POST /vehicles/{vehicleId}/images)
+	FetchVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string)
 	// Retrieve maintenance records for a vehicle
 	// (GET /vehicles/{vehicleId}/maintenance)
 	ListMaintenanceRecords(w http.ResponseWriter, r *http.Request, vehicleId string)
@@ -137,6 +140,12 @@ func (_ Unimplemented) UpdateVehicle(w http.ResponseWriter, r *http.Request, veh
 // Retrieve images for a vehicle
 // (GET /vehicles/{vehicleId}/images)
 func (_ Unimplemented) GetVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Trigger image download for a vehicle
+// (POST /vehicles/{vehicleId}/images)
+func (_ Unimplemented) FetchVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -334,6 +343,37 @@ func (siw *ServerInterfaceWrapper) GetVehicleImages(w http.ResponseWriter, r *ht
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetVehicleImages(w, r, vehicleId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// FetchVehicleImages operation middleware
+func (siw *ServerInterfaceWrapper) FetchVehicleImages(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "vehicleId" -------------
+	var vehicleId string
+
+	err = runtime.BindStyledParameterWithOptions("simple", "vehicleId", chi.URLParam(r, "vehicleId"), &vehicleId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "vehicleId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.FetchVehicleImages(w, r, vehicleId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -657,6 +697,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Get(options.BaseURL+"/vehicles/{vehicleId}/images", wrapper.GetVehicleImages)
 	})
 	r.Group(func(r chi.Router) {
+		r.Post(options.BaseURL+"/vehicles/{vehicleId}/images", wrapper.FetchVehicleImages)
+	})
+	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/vehicles/{vehicleId}/maintenance", wrapper.ListMaintenanceRecords)
 	})
 	r.Group(func(r chi.Router) {
@@ -678,23 +721,24 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"H4sIAAAAAAAC/9RX32/bNhD+V4jbHoVIzYqh01vWooOHFBnSNHsI8sBIZ5utRGrkya1h+H8fSOqHZVGO",
+	"XdRd92RZPB7v++6703EDmSorJVGSgXQDJltiyd3jOy4koeQyw1vMlM7ty0qrCjUJdCaZMmR/czSZFhUJ",
+	"JSGF18oQU3NGS2QG9UpkeAER0LpCSMGQFnIB2whyTmh3z5UuOUHqX4QMd91vxuvChaaR5zeyWENKusaA",
+	"m1IUyBfuyFJIUdYlpElnZ8EuUFtDqcjjG+K6cQ+8YG49AGkbgcZ/aqExh/ShhbPrpA/isdutnj5iRvbc",
+	"e1yKrMAxz8cC5J8wSFCpciyCK2vk2hHCv3hCLpPLX6Oenxe/JQGK9oCKHJrD26MaxwdAzsomFUOkc1Gg",
+	"5CWenuep4DqP42C2ERjMai1o/d7q3ofwhFyjvqpp2f9720r0z7/vIPJVYj351V4JS6IKttaxkHM1ltCV",
+	"ZFd/zRgpRppnn9jKk8HKvtaYdsXm9SXIygHe+ypid3YTausDIlihNt5tcpFcvLAMqQolrwSk8MtFcpFA",
+	"BBWnpYMVN2e5Pwt0dWuZ5za0WQ4pXAtD962RJdFUShq/4TJJfMHbMN1eXlWFyNzu+KPxlem7h1MsYek2",
+	"/qxxDin8FPd9Jm6aTNzqfdvxx7Xma0/gHnGsEL6rdDBc+uqy5HoNKdwiaYErZDxgGUHVdKoh4tcaOWEb",
+	"htcNGvpd5euT0B4FcihMq93tiOQX5zl2yGWzxDKHPmemzjI0Zl4XxXqP1as8Z5xJ/NyS6dY7KcWb5mmW",
+	"b73YC/Q9fcjzG/d+l+cB6pfjQmlj9B4PxuidM96HGIX1/QfSZAjJ9yD+qqv3vh2+PIReKmJzVct8Wuyt",
+	"x6c1m71xSueal0ioDaQPGxDWn20CEIFvrNDlDPYFGe1g3P+2PUZQ1QFWP1T5j1VDyTSftYv1oJo8HMYl",
+	"wy/CkJCL56UfC/sxm26svfBm3vCsWfpufdt/wk9q3o4o9uH2erJ9eyrZXOlhRYcb+FukbPnfcXs5lpqL",
+	"guXqsywUz5khrgn36/dOi8UCdUNHZ7wHelJuO9PCwY/5aIL/3ytvfCc5SX6BMWtKhwHTY0Xpp4pxqGfm",
+	"/tu33QDbRw8xwxS8G7F5/PQxzsTXFEq88XuPmlRCuXt+ZvGmJ40sY2yHppcjwkrOnfz90gpk55nhpqHp",
+	"iNnGVJiJucgmaDpXNUVBX618vuHQFM7nD1PHyWTuvm6OCmVx9w7usrh7+354tAQa1Ks2x8NorlXGC5bj",
+	"CgtVlSiJeVuIoNZFcx1P47iwdktlKH2VvErAOiW+CHm8abNkmMbCYSTVXyQ7Mdz3V8vjXIS+PJ23nfzA",
+	"9nH7bwAAAP//u/pPypQTAAA=",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

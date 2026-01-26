@@ -92,6 +92,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/VehicleImage'
+    post:
+      operationId: fetchVehicleImages
+      summary: Trigger image download for a vehicle
+      parameters:
+        - in: path
+          name: vehicleId
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Image download started
   /vehicles/{vehicleId}/maintenance:
     get:
       operationId: listMaintenanceRecords
