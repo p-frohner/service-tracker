@@ -1,4 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
 	Box,
@@ -64,6 +65,17 @@ export const VehicleDetails = () => {
 							"& .MuiBackdrop-root": { backgroundColor: "transparent", backdropFilter: "none" },
 						}}
 					>
+						<MenuItem
+							onClick={() => {
+								setMenuAnchorEl(null);
+								navigate({ to: "/edit-vehicle/$vehicleId", params: { vehicleId } });
+							}}
+						>
+							<ListItemIcon>
+								<EditIcon />
+							</ListItemIcon>
+							<ListItemText>Edit</ListItemText>
+						</MenuItem>
 						<MenuItem
 							onClick={(e) => {
 								setMenuAnchorEl(null);
