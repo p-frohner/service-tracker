@@ -37,7 +37,6 @@ export const Dialog = ({ open, onClose, anchorEl, children }: Props) => {
 		<MuiDialog
 			open={open}
 			fullWidth
-			maxWidth="xs"
 			onClose={onClose}
 			slots={{ transition: Grow }}
 			slotProps={{

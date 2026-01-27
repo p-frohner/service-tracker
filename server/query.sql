@@ -26,6 +26,11 @@ INSERT INTO maintenance_records (vehicle_id, date, description, mileage, cost, n
 VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 
+-- name: ListMaintenanceRecordsByVehicle :many
+SELECT * FROM maintenance_records
+WHERE vehicle_id = $1
+ORDER BY date DESC;
+
 -- name: AddVehicleImage :exec
 INSERT INTO vehicle_images (vehicle_id, filename)
 VALUES ($1, $2);

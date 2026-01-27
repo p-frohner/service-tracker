@@ -18,7 +18,6 @@ export const AddVehicle = () => {
 	const { control, handleSubmit } = useForm<FormValues>({
 		defaultValues: { make: "", model: "", year: 2013 },
 	});
-
 	const { mutate, isPending } = useCreateVehicle({
 		mutation: {
 			onSuccess: (vehicle) => {
@@ -70,7 +69,9 @@ export const AddVehicle = () => {
 								type="number"
 								label="Year"
 								fullWidth
-								slotProps={{ htmlInput: { min: createVehicleBodyYearMin, max: createVehicleBodyYearMax } }}
+								slotProps={{
+									htmlInput: { min: createVehicleBodyYearMin, max: createVehicleBodyYearMax },
+								}}
 								onChange={(e) => field.onChange(Number(e.target.value))}
 							/>
 						)}
@@ -78,7 +79,7 @@ export const AddVehicle = () => {
 				</Stack>
 				<Box sx={{ py: 3 }}>
 					<Button type="submit" variant="contained" disabled={isPending} fullWidth size="large">
-						{isPending ? "Saving..." : "Add Vehicle"}
+						{isPending ? "Saving..." : "Submit"}
 					</Button>
 				</Box>
 			</Box>

@@ -142,6 +142,41 @@ func (q *Queries) GetVehicleImages(ctx context.Context, vehicleID pgtype.UUID) (
 	return items, nil
 }
 
+const listMaintenanceRecordsByVehicle = `-- name: ListMaintenanceRecordsByVehicle :many
+SELECT id, vehicle_id, date, description, mileage, cost, notes, created_at FROM maintenance_records
+WHERE vehicle_id = $1
+ORDER BY date DESC
+`
+
+func (q *Queries) ListMaintenanceRecordsByVehicle(ctx context.Context, vehicleID pgtype.UUID) ([]MaintenanceRecord, error) {
+	rows, err := q.db.Query(ctx, listMaintenanceRecordsByVehicle, vehicleID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []MaintenanceRecord
+	for rows.Next() {
+		var i MaintenanceRecord
+		if err := rows.Scan(
+			&i.ID,
+			&i.VehicleID,
+			&i.Date,
+			&i.Description,
+			&i.Mileage,
+			&i.Cost,
+			&i.Notes,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listVehicles = `-- name: ListVehicles :many
 SELECT id, make, model, year, created_at FROM vehicles
 ORDER BY created_at DESC
