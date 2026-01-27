@@ -35,6 +35,7 @@ export const Dialog = ({ open, onClose, anchorEl, children }: Props) => {
 
 	return (
 		<MuiDialog
+			disableRestoreFocus
 			open={open}
 			fullWidth
 			onClose={onClose}

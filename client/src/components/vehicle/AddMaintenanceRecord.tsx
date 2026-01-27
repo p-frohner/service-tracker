@@ -1,6 +1,9 @@
 import { Box, Button, Stack, TextField } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useQueryClient } from "@tanstack/react-query";
+import dayjs, { type Dayjs } from "dayjs";
 import { Controller, useForm } from "react-hook-form";
+
 import { getListMaintenanceRecordsQueryKey, useCreateMaintenanceRecord } from "../../api";
 import { Route } from "../../routes/vehicle-details.$vehicleId";
 
@@ -12,11 +15,13 @@ type FormValues = {
 	notes?: string;
 };
 
+const today = new Date().toJSON().slice(0, 10);
+
 export const AddMaintenanceRecord = ({ onSubmit }: { onSubmit: () => void }) => {
 	const { vehicleId } = Route.useParams();
 	const queryClient = useQueryClient();
 	const { control, handleSubmit } = useForm<FormValues>({
-		defaultValues: { date: "", description: "", mileage: 0, cost: "" },
+		defaultValues: { date: today, description: "", mileage: 0, cost: "" },
 	});
 	const { mutate, isPending } = useCreateMaintenanceRecord({
 		mutation: {
@@ -35,13 +40,23 @@ export const AddMaintenanceRecord = ({ onSubmit }: { onSubmit: () => void }) => 
 					control={control}
 					rules={{ required: "Date is required" }}
 					render={({ field, fieldState }) => (
-						<TextField
-							{...field}
+						<DatePicker
 							label="Date"
-							placeholder="YYYY-MM-DD"
-							error={!!fieldState.error}
-							helperText={fieldState.error?.message}
-							fullWidth
+							value={dayjs(field.value)}
+							onChange={(newValue: Dayjs | null) =>
+								field.onChange(newValue?.format("YYYY-MM-DD") ?? "")
+							}
+							enableAccessibleFieldDOMStructure={false}
+							slots={{
+								textField: TextField,
+							}}
+							slotProps={{
+								textField: {
+									fullWidth: true,
+									error: !!fieldState.error,
+									helperText: fieldState.error?.message,
+								},
+							}}
 						/>
 					)}
 				/>
@@ -91,7 +106,7 @@ export const AddMaintenanceRecord = ({ onSubmit }: { onSubmit: () => void }) => 
 					)}
 				/>
 			</Stack>
-			<Box sx={{ py: 3 }}>
+			<Box sx={{ pt: 3 }}>
 				<Button type="submit" variant="contained" disabled={isPending} fullWidth size="large">
 					{isPending ? "Saving..." : "Submit"}
 				</Button>

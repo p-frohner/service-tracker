@@ -15,14 +15,10 @@ import { useMemo, useState } from "react";
 
 import { useListMaintenanceRecords } from "../../api";
 
-type Props = {
-	vehicleId: string;
-};
-
 type SortableColumn = "date" | "mileage" | "cost";
 type Order = "asc" | "desc";
 
-export const MaintenanceRecordList = ({ vehicleId }: Props) => {
+export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 	const { data: records, isLoading } = useListMaintenanceRecords(vehicleId);
 	const [orderBy, setOrderBy] = useState<SortableColumn>("date");
 	const [order, setOrder] = useState<Order>("desc");
