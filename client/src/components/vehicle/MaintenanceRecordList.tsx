@@ -11,7 +11,7 @@ import {
 	TableSortLabel,
 	Typography,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 import { useListMaintenanceRecords } from "../../api";
 
@@ -80,7 +80,7 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 			<Table size="small">
 				<TableHead>
 					<TableRow>
-						<TableCell sortDirection={orderBy === "date" ? order : false}>
+						<TableCell sortDirection={orderBy === "date" ? order : false} width={120}>
 							<TableSortLabel
 								active={orderBy === "date"}
 								direction={orderBy === "date" ? order : "asc"}
@@ -90,7 +90,11 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 							</TableSortLabel>
 						</TableCell>
 						<TableCell>Description</TableCell>
-						<TableCell align="right" sortDirection={orderBy === "mileage" ? order : false}>
+						<TableCell
+							align="right"
+							sortDirection={orderBy === "mileage" ? order : false}
+							width={80}
+						>
 							<TableSortLabel
 								active={orderBy === "mileage"}
 								direction={orderBy === "mileage" ? order : "asc"}
@@ -99,7 +103,7 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 								Mileage
 							</TableSortLabel>
 						</TableCell>
-						<TableCell align="right" sortDirection={orderBy === "cost" ? order : false}>
+						<TableCell align="right" sortDirection={orderBy === "cost" ? order : false} width={80}>
 							<TableSortLabel
 								active={orderBy === "cost"}
 								direction={orderBy === "cost" ? order : "asc"}
@@ -112,12 +116,21 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 				</TableHead>
 				<TableBody>
 					{sortedRecords.map((record) => (
-						<TableRow key={record.id}>
-							<TableCell>{record.date}</TableCell>
-							<TableCell>{record.description}</TableCell>
-							<TableCell align="right">{record.mileage.toLocaleString()}</TableCell>
-							<TableCell align="right">{record.cost || "-"}</TableCell>
-						</TableRow>
+						<Fragment key={record.id}>
+							<TableRow sx={record.notes ? { "& td": { borderBottom: "none" } } : undefined}>
+								<TableCell>{record.date}</TableCell>
+								<TableCell>{record.description}</TableCell>
+								<TableCell align="right">{record.mileage.toLocaleString()}</TableCell>
+								<TableCell align="right">{record.cost || "-"}</TableCell>
+							</TableRow>
+							{record.notes && (
+								<TableRow>
+									<TableCell colSpan={4} sx={{ py: 1 }}>
+										Notes: {record.notes}
+									</TableCell>
+								</TableRow>
+							)}
+						</Fragment>
 					))}
 				</TableBody>
 			</Table>
