@@ -235,7 +235,7 @@ func (s *Server) fetchAndStoreVehicleImages(ctx context.Context, v db.Vehicle) {
 	}
 
 	if len(savedFilenames) > 0 {
-		notification := map[string]interface{}{
+		notification := map[string]any{
 			"type":       "IMAGES_READY",
 			"vehicle_id": v.ID,
 			"filenames":  savedFilenames,
