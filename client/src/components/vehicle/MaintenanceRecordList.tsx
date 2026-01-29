@@ -1,6 +1,16 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
 	Box,
+	Button,
 	CircularProgress,
+	DialogActions,
+	DialogTitle,
+	IconButton,
+	ListItemIcon,
+	ListItemText,
+	Menu,
+	MenuItem,
 	Paper,
 	Table,
 	TableBody,
@@ -11,17 +21,43 @@ import {
 	TableSortLabel,
 	Typography,
 } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
 import { Fragment, useMemo, useState } from "react";
 
-import { useListMaintenanceRecords } from "../../api";
+import {
+	getListMaintenanceRecordsQueryKey,
+	useDeleteMaintenanceRecord,
+	useListMaintenanceRecords,
+} from "../../api";
+import { Dialog, useDialog } from "../Dialog";
 
 type SortableColumn = "date" | "mileage" | "cost";
 type Order = "asc" | "desc";
 
 export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
+	const queryClient = useQueryClient();
 	const { data: records, isLoading } = useListMaintenanceRecords(vehicleId);
+	const { open, isOpen, close, anchorEl } = useDialog();
 	const [orderBy, setOrderBy] = useState<SortableColumn>("date");
 	const [order, setOrder] = useState<Order>("desc");
+	const [menuAnchor, setMenuAnchor] = useState<{ top: number; left: number } | null>(null);
+	const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
+
+	const { mutate: deleteRecord } = useDeleteMaintenanceRecord({
+		mutation: {
+			onSuccess: () => {
+				queryClient.invalidateQueries({
+					queryKey: getListMaintenanceRecordsQueryKey(vehicleId),
+				});
+			},
+		},
+	});
+
+	const handleContextMenu = (e: React.MouseEvent, recordId: string | undefined) => {
+		e.preventDefault();
+		setSelectedRecordId(recordId ?? null);
+		setMenuAnchor({ top: e.clientY, left: e.clientX });
+	};
 
 	const handleSort = (column: SortableColumn) => {
 		if (orderBy === column) {
@@ -80,7 +116,7 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 			<Table size="small">
 				<TableHead>
 					<TableRow>
-						<TableCell sortDirection={orderBy === "date" ? order : false} width={120}>
+						<TableCell {...(orderBy === "date" && { sortDirection: order })} width={120}>
 							<TableSortLabel
 								active={orderBy === "date"}
 								direction={orderBy === "date" ? order : "asc"}
@@ -92,7 +128,7 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 						<TableCell>Description</TableCell>
 						<TableCell
 							align="right"
-							sortDirection={orderBy === "mileage" ? order : false}
+							{...(orderBy === "mileage" && { sortDirection: order })}
 							width={80}
 						>
 							<TableSortLabel
@@ -103,7 +139,11 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 								Mileage
 							</TableSortLabel>
 						</TableCell>
-						<TableCell align="right" sortDirection={orderBy === "cost" ? order : false} width={80}>
+						<TableCell
+							align="right"
+							{...(orderBy === "cost" && { sortDirection: order })}
+							width={80}
+						>
 							<TableSortLabel
 								active={orderBy === "cost"}
 								direction={orderBy === "cost" ? order : "asc"}
@@ -112,20 +152,38 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 								Cost
 							</TableSortLabel>
 						</TableCell>
+						<TableCell width={28} />
 					</TableRow>
 				</TableHead>
 				<TableBody>
 					{sortedRecords.map((record) => (
 						<Fragment key={record.id}>
-							<TableRow sx={record.notes ? { "& td": { borderBottom: "none" } } : undefined}>
+							<TableRow
+								onContextMenu={(e) => handleContextMenu(e, record.id)}
+								sx={{
+									cursor: "context-menu",
+									...(record.notes && { "& td": { borderBottom: "none" } }),
+								}}
+							>
 								<TableCell>{record.date}</TableCell>
 								<TableCell>{record.description}</TableCell>
 								<TableCell align="right">{record.mileage.toLocaleString()}</TableCell>
 								<TableCell align="right">{record.cost || "-"}</TableCell>
+								<TableCell padding="none">
+									<IconButton
+										size="small"
+										onClick={(e) => {
+											setSelectedRecordId(record.id ?? null);
+											setMenuAnchor({ top: e.clientY, left: e.clientX });
+										}}
+									>
+										<MoreVertIcon fontSize="small" />
+									</IconButton>
+								</TableCell>
 							</TableRow>
 							{record.notes && (
 								<TableRow>
-									<TableCell colSpan={4} sx={{ py: 1 }}>
+									<TableCell colSpan={5} sx={{ py: 1 }}>
 										Notes: {record.notes}
 									</TableCell>
 								</TableRow>
@@ -134,6 +192,49 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 					))}
 				</TableBody>
 			</Table>
+			<Menu
+				open={menuAnchor !== null}
+				onClose={() => setMenuAnchor(null)}
+				anchorReference="anchorPosition"
+				{...(menuAnchor && { anchorPosition: menuAnchor })}
+				slotProps={{ paper: { elevation: 3 } }}
+				sx={{
+					"& .MuiBackdrop-root": { backgroundColor: "transparent", backdropFilter: "none" },
+				}}
+			>
+				<MenuItem
+					onClick={(e) => {
+						setMenuAnchor(null);
+						open(e);
+					}}
+				>
+					<ListItemIcon>
+						<DeleteIcon color="error" />
+					</ListItemIcon>
+					<ListItemText>Delete</ListItemText>
+				</MenuItem>
+			</Menu>
+			<Dialog open={isOpen} anchorEl={anchorEl} onClose={close}>
+				<DialogTitle>Delete this maintenance record?</DialogTitle>
+				<DialogActions sx={{ px: 3, pb: 3 }}>
+					<Button onClick={close} variant="outlined" fullWidth>
+						Cancel
+					</Button>
+					<Button
+						variant="contained"
+						color="error"
+						onClick={() => {
+							if (selectedRecordId) {
+								deleteRecord({ vehicleId, recordId: selectedRecordId });
+							}
+							close();
+						}}
+						fullWidth
+					>
+						Delete
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</TableContainer>
 	);
 };

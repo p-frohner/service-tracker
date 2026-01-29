@@ -58,6 +58,9 @@ func (s *Server) Routes() http.Handler {
 	// Static image serving
 	r.Get("/images/{vehicleId}/{filename}", s.ServeImage)
 
+	// TODO: Restrict for dev only
+	r.Post("/dev/vehicles/{vehicleId}/generate-maintenance", s.GenerateMockMaintenanceRecords)
+
 	// Register OpenAPI generated routes
 	api.HandlerFromMux(s, r)
 

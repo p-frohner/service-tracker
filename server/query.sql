@@ -1,3 +1,5 @@
+-- VEHICLES
+
 -- name: ListVehicles :many
 SELECT * FROM vehicles
 ORDER BY created_at DESC;
@@ -21,16 +23,6 @@ RETURNING *;
 DELETE FROM vehicles
 WHERE id = $1;
 
--- name: CreateMaintenanceRecord :one
-INSERT INTO maintenance_records (vehicle_id, date, description, mileage, cost, notes)
-VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING *;
-
--- name: ListMaintenanceRecordsByVehicle :many
-SELECT * FROM maintenance_records
-WHERE vehicle_id = $1
-ORDER BY date DESC;
-
 -- name: AddVehicleImage :exec
 INSERT INTO vehicle_images (vehicle_id, filename)
 VALUES ($1, $2);
@@ -38,3 +30,29 @@ VALUES ($1, $2);
 -- name: GetVehicleImages :many
 SELECT * FROM vehicle_images
 WHERE vehicle_id = $1;
+
+-- MAINTEANANCE RECORDS
+
+-- name: ListMaintenanceRecordsByVehicle :many
+SELECT * FROM maintenance_records
+WHERE vehicle_id = $1
+ORDER BY date DESC;
+
+-- name: CreateMaintenanceRecord :one
+INSERT INTO maintenance_records (vehicle_id, date, description, mileage, cost, notes)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING *;
+
+-- name: DeleteMaintenanceRecord :exec
+DELETE FROM maintenance_records
+WHERE id = $1;
+
+-- name: GetMaintenanceRecord :one
+SELECT * FROM maintenance_records
+WHERE id = $1 LIMIT 1;
+
+-- name: UpdateMaintenanceRecord :one
+UPDATE maintenance_records
+SET date = $2, description = $3, mileage = $4, cost = $5, notes = $6
+WHERE id = $1
+RETURNING *;

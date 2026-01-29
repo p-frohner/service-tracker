@@ -89,6 +89,16 @@ func (q *Queries) CreateVehicle(ctx context.Context, arg CreateVehicleParams) (V
 	return i, err
 }
 
+const deleteMaintenanceRecord = `-- name: DeleteMaintenanceRecord :exec
+DELETE FROM maintenance_records
+WHERE id = $1
+`
+
+func (q *Queries) DeleteMaintenanceRecord(ctx context.Context, id pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, deleteMaintenanceRecord, id)
+	return err
+}
+
 const deleteVehicle = `-- name: DeleteVehicle :exec
 DELETE FROM vehicles
 WHERE id = $1
@@ -97,6 +107,27 @@ WHERE id = $1
 func (q *Queries) DeleteVehicle(ctx context.Context, id pgtype.UUID) error {
 	_, err := q.db.Exec(ctx, deleteVehicle, id)
 	return err
+}
+
+const getMaintenanceRecord = `-- name: GetMaintenanceRecord :one
+SELECT id, vehicle_id, date, description, mileage, cost, notes, created_at FROM maintenance_records
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetMaintenanceRecord(ctx context.Context, id pgtype.UUID) (MaintenanceRecord, error) {
+	row := q.db.QueryRow(ctx, getMaintenanceRecord, id)
+	var i MaintenanceRecord
+	err := row.Scan(
+		&i.ID,
+		&i.VehicleID,
+		&i.Date,
+		&i.Description,
+		&i.Mileage,
+		&i.Cost,
+		&i.Notes,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const getVehicle = `-- name: GetVehicle :one
@@ -143,11 +174,13 @@ func (q *Queries) GetVehicleImages(ctx context.Context, vehicleID pgtype.UUID) (
 }
 
 const listMaintenanceRecordsByVehicle = `-- name: ListMaintenanceRecordsByVehicle :many
+
 SELECT id, vehicle_id, date, description, mileage, cost, notes, created_at FROM maintenance_records
 WHERE vehicle_id = $1
 ORDER BY date DESC
 `
 
+// MAINTEANANCE RECORDS
 func (q *Queries) ListMaintenanceRecordsByVehicle(ctx context.Context, vehicleID pgtype.UUID) ([]MaintenanceRecord, error) {
 	rows, err := q.db.Query(ctx, listMaintenanceRecordsByVehicle, vehicleID)
 	if err != nil {
@@ -178,10 +211,12 @@ func (q *Queries) ListMaintenanceRecordsByVehicle(ctx context.Context, vehicleID
 }
 
 const listVehicles = `-- name: ListVehicles :many
+
 SELECT id, make, model, year, created_at FROM vehicles
 ORDER BY created_at DESC
 `
 
+// VEHICLES
 func (q *Queries) ListVehicles(ctx context.Context) ([]Vehicle, error) {
 	rows, err := q.db.Query(ctx, listVehicles)
 	if err != nil {
@@ -206,6 +241,45 @@ func (q *Queries) ListVehicles(ctx context.Context) ([]Vehicle, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateMaintenanceRecord = `-- name: UpdateMaintenanceRecord :one
+UPDATE maintenance_records
+SET date = $2, description = $3, mileage = $4, cost = $5, notes = $6
+WHERE id = $1
+RETURNING id, vehicle_id, date, description, mileage, cost, notes, created_at
+`
+
+type UpdateMaintenanceRecordParams struct {
+	ID          pgtype.UUID `json:"id"`
+	Date        pgtype.Date `json:"date"`
+	Description string      `json:"description"`
+	Mileage     int32       `json:"mileage"`
+	Cost        *string     `json:"cost"`
+	Notes       *string     `json:"notes"`
+}
+
+func (q *Queries) UpdateMaintenanceRecord(ctx context.Context, arg UpdateMaintenanceRecordParams) (MaintenanceRecord, error) {
+	row := q.db.QueryRow(ctx, updateMaintenanceRecord,
+		arg.ID,
+		arg.Date,
+		arg.Description,
+		arg.Mileage,
+		arg.Cost,
+		arg.Notes,
+	)
+	var i MaintenanceRecord
+	err := row.Scan(
+		&i.ID,
+		&i.VehicleID,
+		&i.Date,
+		&i.Description,
+		&i.Mileage,
+		&i.Cost,
+		&i.Notes,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const updateVehicle = `-- name: UpdateVehicle :one
