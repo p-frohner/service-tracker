@@ -1,10 +1,12 @@
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
 	Box,
 	Button,
 	CircularProgress,
 	DialogActions,
+	DialogContent,
 	DialogTitle,
 	IconButton,
 	ListItemIcon,
@@ -26,10 +28,12 @@ import { Fragment, useMemo, useState } from "react";
 
 import {
 	getListMaintenanceRecordsQueryKey,
+	type MaintenanceRecord,
 	useDeleteMaintenanceRecord,
 	useListMaintenanceRecords,
 } from "../../api";
 import { Dialog, useDialog } from "../Dialog";
+import { EditMaintenanceRecord } from "./EditMaintenanceRecord";
 
 type SortableColumn = "date" | "mileage" | "cost";
 type Order = "asc" | "desc";
@@ -37,11 +41,12 @@ type Order = "asc" | "desc";
 export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 	const queryClient = useQueryClient();
 	const { data: records, isLoading } = useListMaintenanceRecords(vehicleId);
-	const { open, isOpen, close, anchorEl } = useDialog();
+	const deleteDialog = useDialog();
+	const editDialog = useDialog();
 	const [orderBy, setOrderBy] = useState<SortableColumn>("date");
 	const [order, setOrder] = useState<Order>("desc");
 	const [menuAnchor, setMenuAnchor] = useState<{ top: number; left: number } | null>(null);
-	const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
+	const [selectedRecord, setSelectedRecord] = useState<MaintenanceRecord | null>(null);
 
 	const { mutate: deleteRecord } = useDeleteMaintenanceRecord({
 		mutation: {
@@ -53,9 +58,9 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 		},
 	});
 
-	const handleContextMenu = (e: React.MouseEvent, recordId: string | undefined) => {
+	const handleContextMenu = (e: React.MouseEvent, record: MaintenanceRecord) => {
 		e.preventDefault();
-		setSelectedRecordId(recordId ?? null);
+		setSelectedRecord(record);
 		setMenuAnchor({ top: e.clientY, left: e.clientX });
 	};
 
@@ -159,7 +164,7 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 					{sortedRecords.map((record) => (
 						<Fragment key={record.id}>
 							<TableRow
-								onContextMenu={(e) => handleContextMenu(e, record.id)}
+								onContextMenu={(e) => handleContextMenu(e, record)}
 								sx={{
 									cursor: "context-menu",
 									...(record.notes && { "& td": { borderBottom: "none" } }),
@@ -173,7 +178,7 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 									<IconButton
 										size="small"
 										onClick={(e) => {
-											setSelectedRecordId(record.id ?? null);
+											setSelectedRecord(record);
 											setMenuAnchor({ top: e.clientY, left: e.clientX });
 										}}
 									>
@@ -205,7 +210,18 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 				<MenuItem
 					onClick={(e) => {
 						setMenuAnchor(null);
-						open(e);
+						editDialog.open(e);
+					}}
+				>
+					<ListItemIcon>
+						<EditIcon />
+					</ListItemIcon>
+					<ListItemText>Edit</ListItemText>
+				</MenuItem>
+				<MenuItem
+					onClick={(e) => {
+						setMenuAnchor(null);
+						deleteDialog.open(e);
 					}}
 				>
 					<ListItemIcon>
@@ -214,20 +230,32 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 					<ListItemText>Delete</ListItemText>
 				</MenuItem>
 			</Menu>
-			<Dialog open={isOpen} anchorEl={anchorEl} onClose={close}>
+			<Dialog open={editDialog.isOpen} anchorEl={editDialog.anchorEl} onClose={editDialog.close}>
+				<DialogTitle>Edit Maintenance Record</DialogTitle>
+				<DialogContent>
+					{selectedRecord && (
+						<EditMaintenanceRecord record={selectedRecord} onSubmit={editDialog.close} />
+					)}
+				</DialogContent>
+			</Dialog>
+			<Dialog
+				open={deleteDialog.isOpen}
+				anchorEl={deleteDialog.anchorEl}
+				onClose={deleteDialog.close}
+			>
 				<DialogTitle>Delete this maintenance record?</DialogTitle>
 				<DialogActions sx={{ px: 3, pb: 3 }}>
-					<Button onClick={close} variant="outlined" fullWidth>
+					<Button onClick={deleteDialog.close} variant="outlined" fullWidth>
 						Cancel
 					</Button>
 					<Button
 						variant="contained"
 						color="error"
 						onClick={() => {
-							if (selectedRecordId) {
-								deleteRecord({ vehicleId, recordId: selectedRecordId });
+							if (selectedRecord?.id) {
+								deleteRecord({ vehicleId, recordId: selectedRecord.id });
 							}
-							close();
+							deleteDialog.close();
 						}}
 						fullWidth
 					>
