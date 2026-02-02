@@ -98,11 +98,6 @@ func (s *Server) GetVehicleImages(w http.ResponseWriter, r *http.Request, vehicl
 }
 
 func (s *Server) FetchVehicleImages(w http.ResponseWriter, r *http.Request, vehicleId string) {
-	if os.Getenv("SERPER_API_KEY") == "" {
-		s.writeError(w, http.StatusServiceUnavailable, "Image search is not configured")
-		return
-	}
-
 	id, err := stringToUUID(vehicleId)
 	if err != nil {
 		s.writeError(w, http.StatusBadRequest, "Invalid vehicle ID format")

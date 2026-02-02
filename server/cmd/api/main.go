@@ -3,21 +3,21 @@ package main
 import (
 	"context"
 	"log"
-	"os"
+	"service-tracker/internal/config"
 	"service-tracker/internal/handlers"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
-	ctx := context.Background()
-
-	connStr := os.Getenv("DATABASE_URL")
-	if connStr == "" {
-		connStr = "postgres://postgres:postgres@localhost:5432/service_tracker"
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatalf("Configuration error: %v", err)
 	}
 
-	pool, err := pgxpool.New(ctx, connStr)
+	ctx := context.Background()
+
+	pool, err := pgxpool.New(ctx, cfg.DatabaseURL)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v", err)
 	}
@@ -31,13 +31,8 @@ func main() {
 
 	server := handlers.NewServer(pool)
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	log.Printf("Service Tracker Server starting on :%s", port)
-	if err := server.Start(":" + port); err != nil {
+	log.Printf("Service Tracker Server starting on :%s", cfg.Port)
+	if err := server.Start(":" + cfg.Port); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}
 }

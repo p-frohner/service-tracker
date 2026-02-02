@@ -1,4 +1,4 @@
-.PHONY: help install build-all run-server run-client generate reset-db
+.PHONY: help install build-all run-server run-client generate reset-db check-env
 
 # The 'help' target will automatically scan this file and print anything with a double hash (##)
 help: ## Display this help screen
@@ -13,13 +13,21 @@ generate: ## Run codegen for the server (sqlc and oapi-codegen)
 	cd server && sqlc generate
 	cd server && oapi-codegen --config server.cfg.yaml ../openapi.yaml
 
-run-server: ## Run the Go backend with hot reload (Air)
+check-env: ## Validate required environment variables
+	@if docker compose config 2>&1 | grep -q 'SERPER_API_KEY: ""'; then \
+		echo "Error: SERPER_API_KEY is not set"; \
+		echo "Please set it in your .env file or export it"; \
+		exit 1; \
+	fi
+	@echo "Environment OK"
+
+run-server: check-env ## Run the Go backend with hot reload (Air)
 	cd server && air --build.cmd "go build -o tmp/main ./cmd/api/main.go" --build.bin "./tmp/main"
 
 run-client: ## Run the React frontend client
 	cd client && npm run dev
 
-docker-up: ## Start everything via Docker Compose (including DB)
+docker-up: check-env ## Start everything via Docker Compose (including DB)
 	docker compose up --build
 
 docker-down: ## Stop all Docker services
