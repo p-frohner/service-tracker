@@ -1,5 +1,8 @@
 .PHONY: help install build-all run-server run-client generate reset-db check-env
 
+-include .env
+export
+
 # The 'help' target will automatically scan this file and print anything with a double hash (##)
 help: ## Display this help screen
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -14,11 +17,7 @@ generate: ## Run codegen for the server (sqlc and oapi-codegen)
 	cd server && oapi-codegen --config server.cfg.yaml ../openapi.yaml
 
 check-env: ## Validate required environment variables
-	@if docker compose config 2>&1 | grep -q 'SERPER_API_KEY: ""'; then \
-		echo "Error: SERPER_API_KEY is not set"; \
-		echo "Please set it in your .env file or export it"; \
-		exit 1; \
-	fi
+	@test -n "$(SERPER_API_KEY)" || (echo "Error: SERPER_API_KEY is not set. Please set it in your .env file."; exit 1)
 	@echo "Environment OK"
 
 run-server: check-env ## Run the Go backend with hot reload (Air)

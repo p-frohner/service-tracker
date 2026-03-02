@@ -13,42 +13,55 @@ This is the Go backend for the service tracker. It uses a contract-first and sch
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `DATABASE_URL` | PostgreSQL connection string | No (has default) |
 | `IMAGE_STORAGE_PATH` | Local path for storing vehicle images | Yes |
 | `SERPER_API_KEY` | API key for image search ([serper.dev](https://serper.dev)) | Yes |
 | `PORT` | Server port (default: 8080) | No |
 
 ## Local Development
 
+> If you're using Docker (`make docker-up` from the project root), you can skip this section entirely.
+
 ### Prerequisites
-To run this project locally, you need to install:
+
+To run natively, install:
 
  - Go (1.21+): The programming language runtime. [Install Go](https://go.dev/doc/install)
  - PostgreSQL (15+): The database engine. [Postgres App](https://postgresapp.com/) (Mac) or [EnterpriseDB](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads) (Windows).
- - sqlc: For generating type-safe Go from SQL.
+ - Air (hot reload):
+   ```
+   go install github.com/air-verse/air@latest
+   ```
 
-```go
-go install [github.com/air-verse/air@latest](https://github.com/air-verse/air@latest)
+### Database Setup
+
+Create the database and load the schema:
+
+```
+createdb service_tracker
+psql service_tracker < schema.sql
 ```
 
-### Database Setup (sqlc)
-Ensure Postgres is running and the "service_tracker" database exists.
+The server defaults to `postgres://postgres:postgres@localhost:5432/service_tracker`. Override by setting `DATABASE_URL` in the root `.env` file.
 
-When you modify schema.sql (tables) or query.sql (queries), regenerate the database layer:
+### Codegen
+
+When you modify `schema.sql` or `query.sql`, regenerate the database layer:
 
 ```
 sqlc generate
 ```
 
-### API Setup (oapi)
-When you modify the OpenAPI specification (api.yaml), regenerate the server boilerplate:
+When you modify the OpenAPI spec (`../openapi.yaml`), regenerate the server boilerplate:
 
 ```
 oapi-codegen --config server.cfg.yaml ../openapi.yaml
 ```
 
-### Run the Application with hot reload
+### Run the Application
+
+Start the database then run the following command:
 
 ```
-air
+make -C .. run-server
 ```
