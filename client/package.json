@@ -34,7 +34,7 @@
 		"@types/react-dom": "^19.2.3",
 		"@vitejs/plugin-react": "^5.1.1",
 		"globals": "^16.5.0",
-		"orval": "^7.17.2",
+		"orval": "^8.6.2",
 		"typescript": "~5.9.3",
 		"vite": "^7.2.4"
 	}
