@@ -54,6 +54,7 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 				queryClient.invalidateQueries({
 					queryKey: getListMaintenanceRecordsQueryKey(vehicleId),
 				});
+				deleteDialog.close();
 			},
 		},
 	});
@@ -255,7 +256,6 @@ export const MaintenanceRecordList = ({ vehicleId }: { vehicleId: string }) => {
 							if (selectedRecord?.id) {
 								deleteRecord({ vehicleId, recordId: selectedRecord.id });
 							}
-							deleteDialog.close();
 						}}
 						fullWidth
 					>

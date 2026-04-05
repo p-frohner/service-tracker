@@ -4,7 +4,7 @@ export default defineConfig({
 	"service-tracker-api": {
 		input: "../openapi.yaml",
 		output: {
-			baseUrl: "http://localhost:8080",
+			baseUrl: "",
 			target: "./src/api.ts",
 			client: "react-query",
 			httpClient: "fetch",

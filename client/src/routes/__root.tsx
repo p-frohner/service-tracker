@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline, Divider, GlobalStyles, ThemeProvider } from "@mui/material";
+import { Box, Button, Container, CssBaseline, Divider, GlobalStyles, ThemeProvider, Typography } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
@@ -10,7 +10,13 @@ import { theme } from "../themeProvider";
 export const Route = createRootRoute({
 	component: () => {
 		return (
-			<ErrorBoundary FallbackComponent={({ error }) => <pre>{error.message}</pre>}>
+			<ErrorBoundary FallbackComponent={({ error }) => (
+				<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "60vh", gap: 2 }}>
+					<Typography variant="h6">Something went wrong</Typography>
+					<Typography color="text.secondary">{error.message}</Typography>
+					<Button variant="outlined" onClick={() => window.location.reload()}>Reload</Button>
+				</Box>
+			)}>
 				<LocalizationProvider dateAdapter={AdapterDayjs}>
 					<CssBaseline />
 					<ThemeProvider theme={theme}>

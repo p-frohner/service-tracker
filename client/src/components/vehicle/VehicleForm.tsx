@@ -54,12 +54,19 @@ export const VehicleForm = ({ defaultValues, onSubmit, isPending, submitLabel }:
 				<Controller
 					name="year"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						required: "Year is required",
+						min: { value: createVehicleBodyYearMin, message: `Year must be ${createVehicleBodyYearMin} or later` },
+						max: { value: createVehicleBodyYearMax, message: `Year must be ${createVehicleBodyYearMax} or earlier` },
+					}}
+					render={({ field, fieldState }) => (
 						<TextField
 							{...field}
 							type="number"
 							label="Year"
 							fullWidth
+							error={!!fieldState.error}
+							helperText={fieldState.error?.message}
 							slotProps={{
 								htmlInput: { min: createVehicleBodyYearMin, max: createVehicleBodyYearMax },
 							}}

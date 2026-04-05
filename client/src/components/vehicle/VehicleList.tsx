@@ -5,13 +5,21 @@ import { VehicleCard } from "./VehicleCard";
 
 export const VehicleList = () => {
 	const navigate = useNavigate();
-	const { data: vehicles, isLoading } = useListVehicles();
+	const { data: vehicles, isLoading, isError } = useListVehicles();
 
 	if (isLoading) {
 		return (
 			<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
 				<CircularProgress color="primary" />
 				<Typography sx={{ ml: 2 }}>Loading...</Typography>
+			</Box>
+		);
+	}
+
+	if (isError) {
+		return (
+			<Box sx={{ textAlign: "center", mt: 10, p: 4 }}>
+				<Typography color="error">Failed to load vehicles. Please try again.</Typography>
 			</Box>
 		);
 	}
@@ -39,7 +47,7 @@ export const VehicleList = () => {
 					key={vehicle.id}
 					vehicle={vehicle}
 					onSelect={(vehicle) => {
-						navigate({ to: `/vehicle-details/${vehicle.id}` });
+						navigate({ to: "/vehicle-details/$vehicleId", params: { vehicleId: vehicle.id } });
 					}}
 				/>
 			))}

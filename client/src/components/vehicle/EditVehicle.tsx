@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Box, CircularProgress, Container } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { getGetVehicleQueryKey, getListVehiclesQueryKey, useGetVehicle, useUpdateVehicle } from "../../api";
@@ -10,7 +10,7 @@ export const EditVehicle = () => {
 	const { vehicleId } = Route.useParams();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
-	const { data: vehicle } = useGetVehicle(vehicleId);
+	const { data: vehicle, isLoading } = useGetVehicle(vehicleId);
 	const { mutate, isPending } = useUpdateVehicle({
 		mutation: {
 			onSuccess: () => {
@@ -24,6 +24,14 @@ export const EditVehicle = () => {
 	const handleSubmit = (data: VehicleFormValues) => {
 		mutate({ vehicleId, data });
 	};
+
+	if (isLoading) {
+		return (
+			<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh" }}>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	if (!vehicle) {
 		return null;

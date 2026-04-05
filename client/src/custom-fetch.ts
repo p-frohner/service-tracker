@@ -5,10 +5,12 @@ export type BackendError = {
 // Orval picks up this exported type and uses it for TError in generated hooks
 export type ErrorType<_T> = BackendError;
 
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+
 export const customFetch = async <T>(url: string, options: RequestInit): Promise<T> => {
 	let response: Response;
 	try {
-		response = await fetch(url, options);
+		response = await fetch(`${BASE_URL}${url}`, options);
 	} catch {
 		// Network error (server down, no internet, CORS, etc.)
 		throw { message: "Unable to connect to server" } as BackendError;
